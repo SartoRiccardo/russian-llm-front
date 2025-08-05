@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Agent symlinks
+**/CLAUDE.md
+**/GEMINI.md
+**/AGENTS.md

@@ -9,8 +9,9 @@ import type {
   AuthProviderProps,
   IUserData,
 } from '@/types/main';
-
 import { AuthContext } from './contexts';
+
+const SESSION_EXPIRE_KEY = 'sessionExpire';
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userData, setUserData] = useState<IUserData | null>(null);
@@ -20,7 +21,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const isLoggedIn = !!userData && userData.sessionExpire > Date.now();
 
   const handleLogin = useCallback(async () => {
-    const sessionExpireFromStorage = localStorage.getItem('sessionExpire');
+    const sessionExpireFromStorage = localStorage.getItem(SESSION_EXPIRE_KEY);
     if (sessionExpireFromStorage) {
       setIsLoading(true);
       const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
@@ -39,12 +40,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             error instanceof Error &&
             !error.message.includes('NetworkError')
           ) {
-            localStorage.removeItem('sessionExpire');
+            localStorage.removeItem(SESSION_EXPIRE_KEY);
           }
           setUserData(null);
         }
       } else {
-        localStorage.removeItem('sessionExpire');
+        localStorage.removeItem(SESSION_EXPIRE_KEY);
         setUserData(null);
       }
     }
@@ -84,7 +85,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setIsLoading(true);
     try {
       const response = await apiLogin(email, password);
-      localStorage.setItem('sessionExpire', response.sessionExpire.toString());
+      localStorage.setItem(
+        SESSION_EXPIRE_KEY,
+        response.sessionExpire.toString(),
+      );
       setUserData({
         username: response.username,
         sessionExpire: response.sessionExpire,
@@ -102,7 +106,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       await apiLogout();
     } finally {
-      localStorage.removeItem('sessionExpire');
+      localStorage.removeItem(SESSION_EXPIRE_KEY);
       setUserData(null);
       setIsLoading(false);
     }

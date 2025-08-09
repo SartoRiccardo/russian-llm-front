@@ -2,11 +2,11 @@
 import { useAuth } from '../hooks/useAuth';
 
 const HomePage = () => {
-  const { username, logout } = useAuth();
+  const { userData, logout } = useAuth();
 
   return (
     <div>
-      <h1>Welcome, {username}</h1>
+      <h1>Welcome, {userData?.username}</h1>
       <button onClick={logout}>Logout</button>
     </div>
   );

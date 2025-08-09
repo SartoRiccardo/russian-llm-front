@@ -7,57 +7,50 @@ import {
 import type {
   ICheckLoginStatusResponse,
   ILoginResponse,
+  IAuthContext,
+  AuthProviderProps,
+  IUserData,
 } from '../../types/main';
-
-interface IAuthContext {
-  username: string | null;
-  isLoading: boolean;
-  isLoggedIn: boolean;
-  isSlowNetwork: boolean;
-  sessionExpire: number;
-  sessionExpireMs: number;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-}
 
 export const AuthContext = createContext<IAuthContext | null>(null);
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [username, setUsername] = useState<string | null>(null);
+  const [userData, setUserData] = useState<IUserData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isSlowNetwork, setIsSlowNetwork] = useState<boolean>(false);
-  const [sessionExpire, setSessionExpire] = useState<number>(0);
+
+  const isLoggedIn = !!userData && userData.sessionExpire > Date.now();
+
+  const handleLogin = useCallback(async () => {
+    const sessionExpireFromStorage = localStorage.getItem('sessionExpire');
+    if (!sessionExpireFromStorage) return;
+
+    setIsLoading(true);
+    const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
+    if (sessionExpireInt > Date.now()) {
+      try {
+        const response =
+          (await apiCheckLoginStatus()) as ICheckLoginStatusResponse;
+        setUserData({
+          username: response.username,
+          sessionExpire: response.sessionExpire,
+        });
+      } catch (error) {
+        // Unauthorized or other error
+        // Only delete sessionExpire if it's a 4xx error, not network error
+        if (error instanceof Error && !error.message.includes('NetworkError')) {
+          localStorage.removeItem('sessionExpire');
+        }
+        setUserData(null);
+      }
+    } else {
+      localStorage.removeItem('sessionExpire');
+      setUserData(null);
+    }
+    setIsLoading(false);
+  }, []);
 
   useEffect(() => {
-    const handleLogin = async () => {
-      const sessionExpireFromStorage = localStorage.getItem('sessionExpire');
-      if (!sessionExpireFromStorage) return;
-
-      setIsLoading(true);
-      const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
-      if (sessionExpireInt > Date.now()) {
-        try {
-          const { username, sessionExpire } = await apiCheckLoginStatus();
-          setUsername(username);
-          setSessionExpire(sessionExpire);
-          setIsLoggedIn(true);
-        } catch (error) {
-          // Unauthorized or other error
-          localStorage.removeItem('sessionExpire');
-          setIsLoggedIn(false);
-        }
-      } else {
-        localStorage.removeItem('sessionExpire');
-        setIsLoggedIn(false);
-      }
-      setIsLoading(false);
-    };
-
     let retryTimeout: ReturnType<typeof setTimeout>;
     let slowNetworkTimeout: ReturnType<typeof setTimeout>;
 
@@ -83,7 +76,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       clearTimeout(retryTimeout);
       clearTimeout(slowNetworkTimeout);
     };
-  }, []);
+  }, [handleLogin]);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -93,11 +86,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         password,
       )) as ILoginResponse;
       localStorage.setItem('sessionExpire', sessionExpire.toString());
-      setSessionExpire(sessionExpire);
-      setUsername('testuser'); // In a real app, the username would come from the API
-      setIsLoggedIn(true);
+      // After successful login, trigger handleLogin to fetch full user data
+      await handleLogin();
     } catch (error) {
-      setIsLoggedIn(false);
+      setUserData(null);
       throw error;
     } finally {
       setIsLoading(false);
@@ -110,20 +102,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       await apiLogout();
     } finally {
       localStorage.removeItem('sessionExpire');
-      setUsername(null);
-      setIsLoggedIn(false);
-      setSessionExpire(0);
+      setUserData(null);
       setIsLoading(false);
     }
   };
 
   const contextValue = {
-    username,
+    userData,
     isLoading,
     isLoggedIn,
     isSlowNetwork,
-    sessionExpire: Math.floor((sessionExpire - Date.now()) / 1000),
-    sessionExpireMs: sessionExpire - Date.now(),
+    sessionExpire: userData
+      ? Math.floor((userData.sessionExpire - Date.now()) / 1000)
+      : 0,
+    sessionExpireMs: userData ? userData.sessionExpire - Date.now() : 0,
     login,
     logout,
   };

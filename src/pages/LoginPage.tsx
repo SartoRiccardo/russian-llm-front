@@ -6,7 +6,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const { login } = useAuth();
+  const { login, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,9 +20,14 @@ const LoginPage = () => {
     }
   };
 
+  if (isLoading) {
+    return <div>Authenticating...</div>;
+  }
+
   return (
     <div>
       <h1>Login</h1>
+      <p>Use email: <strong>test@test.com</strong> and password: <strong>password</strong></p>
       <form onSubmit={handleSubmit} data-cy="f-login">
         <div>
           <label htmlFor="email">Email</label>
@@ -42,7 +47,7 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {error && <p className="red">{error}</p>}
+        {error && <p className="text-red-500">{error}</p>}
         <button type="submit">Login</button>
       </form>
       <a href="#" data-cy="forgot-password">

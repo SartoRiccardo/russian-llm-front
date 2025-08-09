@@ -9,11 +9,7 @@ import { PrivateRoute } from '@/components/PrivateRoute';
 
 
 const AppRoutes = () => {
-  const { isLoggedIn, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const { isLoggedIn } = useAuth();
 
   return (
     <Routes>

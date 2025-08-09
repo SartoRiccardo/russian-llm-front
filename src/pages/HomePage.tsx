@@ -1,5 +1,6 @@
 
 import { useAuth } from '@/hooks/useAuth';
+import withAuthLoading from '@/components/hoc/withAuthLoading';
 
 const HomePage = () => {
   const { userData, logout } = useAuth();
@@ -12,4 +13,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default withAuthLoading(HomePage);

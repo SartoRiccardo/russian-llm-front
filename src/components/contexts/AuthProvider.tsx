@@ -5,7 +5,7 @@ import {
   logout as apiLogout,
 } from '@/services/russian-llm-api';
 import type {
-  ICheckLoginStatusResponse,
+  IAuthnSuccessResponse,
   AuthProviderProps,
   IUserData,
 } from '@/types/main';
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (sessionExpireInt > Date.now()) {
         try {
           const response =
-            (await apiCheckLoginStatus()) as ICheckLoginStatusResponse;
+            (await apiCheckLoginStatus()) as IAuthnSuccessResponse;
           setUserData({
             username: response.username,
             sessionExpire: response.sessionExpire,

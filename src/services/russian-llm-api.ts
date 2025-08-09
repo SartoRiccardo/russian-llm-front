@@ -1,7 +1,7 @@
 
-import type { ICheckLoginStatusResponse } from '@/types/main';
+import type { IAuthnSuccessResponse } from '@/types/main';
 
-export const checkLoginStatus = async (): Promise<ICheckLoginStatusResponse> => {
+export const checkLoginStatus = async (): Promise<IAuthnSuccessResponse> => {
   // Mock API call
   return new Promise((resolve, reject) => {
     setTimeout(() => {
@@ -19,7 +19,7 @@ export const checkLoginStatus = async (): Promise<ICheckLoginStatusResponse> => 
   });
 };
 
-export const login = async (email: string, password: string): Promise<ICheckLoginStatusResponse> => {
+export const login = async (email: string, password: string): Promise<IAuthnSuccessResponse> => {
   // Mock API call
   return new Promise((resolve, reject) => {
     setTimeout(() => {

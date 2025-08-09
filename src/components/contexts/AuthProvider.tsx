@@ -1,18 +1,16 @@
-import { createContext, useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   checkLoginStatus as apiCheckLoginStatus,
   login as apiLogin,
   logout as apiLogout,
-} from '../../services/russian-llm-api';
+} from '@/services/russian-llm-api';
 import type {
   ICheckLoginStatusResponse,
-  ILoginResponse,
-  IAuthContext,
   AuthProviderProps,
   IUserData,
-} from '../../types/main';
+} from '@/types/main';
 
-export const AuthContext = createContext<IAuthContext | null>(null);
+import { AuthContext } from './contexts';
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userData, setUserData] = useState<IUserData | null>(null);
@@ -23,30 +21,34 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleLogin = useCallback(async () => {
     const sessionExpireFromStorage = localStorage.getItem('sessionExpire');
-    if (!sessionExpireFromStorage) return;
-
-    setIsLoading(true);
-    const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
-    if (sessionExpireInt > Date.now()) {
-      try {
-        const response =
-          (await apiCheckLoginStatus()) as ICheckLoginStatusResponse;
-        setUserData({
-          username: response.username,
-          sessionExpire: response.sessionExpire,
-        });
-      } catch (error) {
-        // Unauthorized or other error
-        // Only delete sessionExpire if it's a 4xx error, not network error
-        if (error instanceof Error && !error.message.includes('NetworkError')) {
-          localStorage.removeItem('sessionExpire');
+    if (sessionExpireFromStorage) {
+      setIsLoading(true);
+      const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
+      if (sessionExpireInt > Date.now()) {
+        try {
+          const response =
+            (await apiCheckLoginStatus()) as ICheckLoginStatusResponse;
+          setUserData({
+            username: response.username,
+            sessionExpire: response.sessionExpire,
+          });
+        } catch (error) {
+          // Unauthorized or other error
+          // Only delete sessionExpire if it's a 4xx error, not network error
+          if (
+            error instanceof Error &&
+            !error.message.includes('NetworkError')
+          ) {
+            localStorage.removeItem('sessionExpire');
+          }
+          setUserData(null);
         }
+      } else {
+        localStorage.removeItem('sessionExpire');
         setUserData(null);
       }
-    } else {
-      localStorage.removeItem('sessionExpire');
-      setUserData(null);
     }
+
     setIsLoading(false);
   }, []);
 
@@ -81,13 +83,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const { sessionExpire } = (await apiLogin(
-        email,
-        password,
-      )) as ILoginResponse;
-      localStorage.setItem('sessionExpire', sessionExpire.toString());
-      // After successful login, trigger handleLogin to fetch full user data
-      await handleLogin();
+      const response = await apiLogin(email, password);
+      localStorage.setItem('sessionExpire', response.sessionExpire.toString());
+      setUserData({
+        username: response.username,
+        sessionExpire: response.sessionExpire,
+      });
     } catch (error) {
       setUserData(null);
       throw error;

@@ -1,11 +1,11 @@
 
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
-import { AuthProvider } from './components/contexts/AuthProvider';
-import { useAuth } from './hooks/useAuth';
-import HomePage from './pages/HomePage';
-import LoginPage from './pages/LoginPage';
-import { PrivateRoute } from './components/PrivateRoute';
+import { AuthProvider } from '@/components/contexts/AuthProvider';
+import { useAuth } from '@/hooks/useAuth';
+import HomePage from '@/pages/HomePage';
+import LoginPage from '@/pages/LoginPage';
+import { PrivateRoute } from '@/components/PrivateRoute';
 
 
 const AppRoutes = () => {

@@ -1,5 +1,5 @@
 
-import type { ILoginResponse, ICheckLoginStatusResponse } from '../types/main';
+import type { ICheckLoginStatusResponse } from '@/types/main';
 
 export const checkLoginStatus = async (): Promise<ICheckLoginStatusResponse> => {
   // Mock API call
@@ -10,7 +10,7 @@ export const checkLoginStatus = async (): Promise<ICheckLoginStatusResponse> => 
       } else {
         const sessionExpire = localStorage.getItem('sessionExpire');
         if (sessionExpire && parseInt(sessionExpire, 10) > Date.now()) {
-          resolve({ username: 'testuser', sessionExpire: parseInt(sessionExpire, 10) });
+          resolve({ username: 'testuser', sessionExpire: Date.now() + 3600 * 1000 });
         } else {
           reject(new Error('Unauthorized'));
         }
@@ -19,12 +19,12 @@ export const checkLoginStatus = async (): Promise<ICheckLoginStatusResponse> => 
   });
 };
 
-export const login = async (email: string, password: string): Promise<ILoginResponse> => {
+export const login = async (email: string, password: string): Promise<ICheckLoginStatusResponse> => {
   // Mock API call
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (email === 'test@test.com' && password === 'password') {
-        resolve({ sessionExpire: Date.now() + 3600 * 1000 });
+        resolve({ username: 'testuser', sessionExpire: Date.now() + 3600 * 1000 });
       } else {
         reject(new Error('Invalid credentials'));
       }

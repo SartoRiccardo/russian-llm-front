@@ -32,7 +32,8 @@ React Router may be used **only** for routing. Any feature it has regarding stat
 
 ## Component Structure
 
-- Contexts should go in `components/contexts`
+- Contexts providers should go in `components/contexts`. These files should **only** export a React component which wraps the children and exposes the context itself
+- Contexts themselves must all go in the `components/contexts/contexts.ts`. This file contains all `createContext` calls
 - Input-related components that do very simple things (for example, a simple button or a styled textarea) should go in `components/inputs`
 - Other components should go in `components/other`
 

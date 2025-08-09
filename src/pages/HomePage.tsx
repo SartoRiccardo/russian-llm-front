@@ -2,6 +2,10 @@
 import { useAuth } from '@/hooks/useAuth';
 import withAuthLoading from '@/components/hoc/withAuthLoading';
 
+/**
+ * The home page of the application, accessible after successful authentication.
+ * Displays a welcome message with the username and a logout button.
+ */
 const HomePage = () => {
   const { userData, logout } = useAuth();
 

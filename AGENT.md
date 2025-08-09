@@ -14,7 +14,7 @@ This proect uses:
 
 - **React.js** with **Vite**
 - **Tailwind** for the CSS
-- **React Router v[tba]** for routing
+- **React Router v7** for routing. Do **not** install React Router Dom or try to switch libraries. The routing is already set up.
 - **Cypress** for testing
 
 React Router may be used **only** for routing. Any feature it has regarding state **should never be used**. For managing state, use React Contexts (more on this later).
@@ -101,7 +101,7 @@ export function sendData(data: { user: string }): {
 # Coding Style
 
 - Comments should be reserved only for complex parts
-- The following items should have docstrings or comments detailing what they are, which should be kept updated:
+- The following items should **always have docstrings or comments detailing what they are**, which should be kept updated:
   - TypeScript types, especially ones detailing return types from HTTP requests
   - React components
 - Use React State only for things which actually require a state: variables that are only a product of the state do not actually require a state! If a variable is a result of operations on other variables, it's not a state variable
@@ -110,3 +110,20 @@ export function sendData(data: { user: string }): {
   - The `data-cy` attribute should **always** be present in forms, and it should begin with `f-`. For example, a form to submit a support ticket will have `data-cy="f-submit-support-ticket"`
   - If the `data-cy` attribute is not written in the specifications, you can invent one. It should be descriptive and unique across the application
 - You should default to using TypeScript interfaces wherever possible instead of types. Interfaces should begin with `I`, for example: `IUserResponseData`
+- If a type of a function's return type or parameter is an object, it **must** be declared as a type. For example:
+
+```ts
+// Wrong
+function someWrongFunction(someParam: {
+  someProp: string;
+}): Promise<{ someRetVal: number }> {
+  // Some code...
+}
+
+// Correct
+function someCorrectFunction(
+  someParam: IFunctionParams,
+): Promise<IFunctionReturnType> {
+  // Some code...
+}
+```

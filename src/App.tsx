@@ -3,7 +3,6 @@ import { AuthProvider } from '@/components/contexts/AuthProvider';
 import { useAuth } from '@/hooks/useAuth';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
-import { PrivateRoute } from '@/components/PrivateRoute';
 
 /**
  * Defines the application's routes.
@@ -17,10 +16,8 @@ const AppRoutes = () => {
         path="/login"
         element={isLoggedIn ? <Navigate to="/" /> : <LoginPage />}
       />
-      <Route path="/" element={<PrivateRoute />}>
-        <Route index element={<HomePage />} />
-        <Route path="home" element={<HomePage />} />
-      </Route>
+      <Route path="/" element={<HomePage />} />
+      <Route path="home" element={<HomePage />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

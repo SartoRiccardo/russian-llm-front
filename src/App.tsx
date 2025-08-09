@@ -1,5 +1,3 @@
-
-
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { AuthProvider } from '@/components/contexts/AuthProvider';
 import { useAuth } from '@/hooks/useAuth';
@@ -7,7 +5,9 @@ import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import { PrivateRoute } from '@/components/PrivateRoute';
 
-
+/**
+ * Defines the application's routes.
+ */
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();
 
@@ -26,6 +26,10 @@ const AppRoutes = () => {
   );
 };
 
+/**
+ * The root component of the React application.
+ * Sets up the BrowserRouter and AuthProvider for global context.
+ */
 function App() {
   return (
     <BrowserRouter>

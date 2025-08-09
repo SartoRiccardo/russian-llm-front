@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router';
 
+/**
+ * The login page component.
+ * Allows users to log in with test credentials and handles authentication state.
+ */
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

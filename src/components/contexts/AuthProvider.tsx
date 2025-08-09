@@ -13,6 +13,10 @@ import { AuthContext } from './contexts';
 
 const SESSION_EXPIRE_KEY = 'sessionExpire';
 
+/**
+ * Provides authentication context to the application.
+ * Manages user login status, session expiration, and authentication-related operations.
+ */
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userData, setUserData] = useState<IUserData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);

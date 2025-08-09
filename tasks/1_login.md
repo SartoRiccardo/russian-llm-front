@@ -1,0 +1,63 @@
+# 1. Login
+
+# Objective
+
+Create a login page and a blank page the user can see when logged in (with basic info such as a logout button and info showing your username).
+
+# Implementation
+
+This section uses the Russian LLM API. For now, you are to **mock all API calls here**.
+
+## Routes
+
+- Any page the user visits while it's not logged in redirects to `/login`
+  - Visiting `/login` while the user is already logged in redirects to `/`
+- Otherwise, the only page available for now while the user is logged in is `/`. `/home` is also an alias of `/`
+
+## Login status
+
+When the app is visited for the first time, check localStorage for an `sessionExpire` key which should always be an integer. If not set or invalid, delete it and assume the user is not logged in. Otherwise treat it as a timestamp: if the date in `sessionExpire` is greater than the current time, the session has expired and the user must log in (and the key should be deleted as well). If `sessionExpire` is valid and not stale, an API request is made to the backend to check the user's login status. This call passes an `HttpOnly` cookie to the backend which is all it needs, so the function should have no arguments.
+
+The API call, for now, returns a JSON object with this schema:
+
+```ts
+{
+    username: string,
+    sessionExpire: number,
+}
+```
+
+In this case, the status code of the request will be `200`. If the request answers with a code starting with 4 (most commonly `401`), the user is unauthorized should be treated as not logged in, and `sessionExpire` must be deleted.
+
+Network Errors in this request should **not** delete any login data such as `sessionExpire`.
+
+## Login
+
+The login form should include (currently non-functional) a "forgot password" link (selectable for testing). On submit, it should call the API to log in. The function to log in expects as a parameter just the email and password of the user. After making the request, if it returns a `200` request it should return this JSON schema:
+
+```ts
+{
+    sessionExpire: number,
+}
+```
+
+`sessionExpire` is the previously cited value.
+
+## Session handling
+
+Information about the login must be handled though a `AuthProvider` context. This context should provide:
+
+- The username
+- An `isLoading` flag that is `true` if the promise to log in is still pending
+- An interface to abstract the access to localStorage for the `sessionExpire` value. This interface should expose an object that lists:
+  - `sessionExpire`: How many seconds are left until expiration
+  - `sessionExpireMs`: How many milliseconds are left until expiration
+- `isLoggedIn`: A boolean to check if there is an active session or not. It is `false` by default and is switched to `true` on a successful login request/session resume.
+- `isSlowNetwork`: A boolean described later.
+- `logout`: An async function to log out. Resets the state by putting it in a logged-out state, deletes `sessionExpire` and make a call to the API to log out. This API call function takes no parameters.
+
+This context is responsible, on page load, to check if there is a `sessionExpire` set and, if present, kick off all the authentication logic. If a `NetworkError` happens while fetching the login data, retry every 2 seconds. `isLoading` must be `true` while you don't get a response from the server (whether it be positive or negative, as long as you get a response). If you tried for more than 10 seconds without a response, `isSlowNetwork` becomes `true`. It becomes `false` once you reach a response.
+
+## Logout
+
+The logout button simply calls the logout function provided by `AuthProvider`

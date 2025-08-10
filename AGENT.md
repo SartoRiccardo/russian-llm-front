@@ -14,7 +14,8 @@ This proect uses:
 
 - **React.js** with **Vite**
 - **Tailwind** for the CSS
-- **React Router v7** for routing. Do **not** install React Router Dom or try to switch libraries. The routing is already set up.
+- **React Router v7** for routing. Do **not** install React Router Dom or try to switch libraries. The routing is already set up
+- **Formik** for form validation
 - **Cypress** for testing
 
 React Router may be used **only** for routing. Any feature it has regarding state **should never be used**. For managing state, use React Contexts (more on this later).
@@ -35,6 +36,7 @@ React Router may be used **only** for routing. Any feature it has regarding stat
 - Contexts providers should go in `components/contexts`. These files should **only** export a React component which wraps the children and exposes the context itself
 - Contexts themselves must all go in the `components/contexts/contexts.ts`. This file contains all `createContext` calls
 - Input-related components that do very simple things (for example, a simple button or a styled textarea) should go in `components/inputs`
+- Simple UI components such as toasts, panels, containers, and similar should go in `components/ui`
 - Other components should go in `components/other`
 
 # Services
@@ -76,6 +78,8 @@ export function sendData(data: DataSend): void {
 
 You may be asked to mock data coming from the backend. When asked to do so, put all mocking logic in the **service file** for that service. This makes maintaining easy because all the app uses an API coming from a single source of truth, and once we are ready to connect the real back-end it's as easy as only changing that file. If the task specifies to implement some error handling logic, mock a fetch response to only have the attributes you need.
 
+When mocking API calls, **create a mock function with identical parameters to the built-in `fetch` function**. This makes writing logic the exact same as if the native `fetch` function was called, which will make switching to the real API really easy. When mocking requests, the schema will always be provided but the URL will probably not be provided. In this case, you are free to invent an URL which will be corrected at a later date. In these cases, the base URL must be `http://localhost:8000`.
+
 For example, if we wanted to mock the backend from the example above, we would leave `SomeComponent.tsx` unchanged and modify `src/services/russian-llm-api.ts` like this:
 
 ```ts
@@ -88,15 +92,24 @@ export function sendData(data: { user: string }): {
   success: boolean;
   error?: string;
 } {
-  const mockFetch = async function () {
-    return { status: 200 };
+  const mockFetch = async function (url, options) {
+    const { user } = JSON.parse(options);
+    return {
+      status: data.user === 'good-user' ? 200 : 403,
+      json: async function () {
+        return {
+          success: data.user === 'good-user',
+          error: 'It is forbidden!',
+        };
+      },
+    };
   };
 
-  const response = await mockFetch();
-  if (response.status === 403)
-    return { success: false, error: 'It is forbidden!' };
-
-  return { success: data.user === 'good-user' };
+  const response = await mockFetch('http://localhost:8000/made/up/url', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return await response.json();
 }
 ```
 

@@ -3,6 +3,8 @@ import { AuthProvider } from '@/components/contexts/AuthProvider';
 import { useAuth } from '@/hooks/useAuth';
 import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
+import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
+import PasswordResetPage from '@/pages/PasswordResetPage';
 import ToastProvider from '@/components/contexts/ToastProvider';
 
 /**
@@ -16,6 +18,18 @@ const AppRoutes = () => {
       <Route
         path="/login"
         element={isLoggedIn ? <Navigate to="/" /> : <LoginPage />}
+      />
+      <Route
+        path="/forgot-password"
+        element={
+          isLoggedIn ? <Navigate to="/settings" /> : <ForgotPasswordPage />
+        }
+      />
+      <Route
+        path="/password-reset"
+        element={
+          isLoggedIn ? <Navigate to="/settings" /> : <PasswordResetPage />
+        }
       />
       <Route path="/" element={<HomePage />} />
       <Route path="home" element={<HomePage />} />

@@ -32,6 +32,7 @@ React Router may be used **only** for routing. Any feature it has regarding stat
    - Type definitions for component props should go in the component's own file. If the type definition for a certain component's prop is used for multiple components, it should be externalized to its own file. These prop file types should go into `src/types/props`
 5. `src/hooks` contains all custom hooks. More on how to properly code custom hooks later.
 6. `src/services` holds integrations with external services, most notably the main API coded specifically for this project. All logic for fetching data must go strictly in files in this folder. More on this later.
+7. `src/errors` contains custom, user-defined errors. Useful in conjunction with the APIs in `src/services` to throw errors whenever something with the request goes wrong.
 
 ## Component Structure
 

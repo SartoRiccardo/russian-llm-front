@@ -69,10 +69,13 @@ export const sendPasswordResetEmail = async (values: {
     return new Response(JSON.stringify({}), { status: 204 });
   };
 
-  const response = await mockFetch('http://localhost:8000/forgot-password', {
-    method: 'POST',
-    body: JSON.stringify(values),
-  });
+  const response = await mockFetch(
+    `${import.meta.env.VITE_API_BASE_URL}/forgot-password`,
+    {
+      method: 'POST',
+      body: JSON.stringify(values),
+    },
+  );
 
   if (response.status === 422) {
     throw new ValidationError('That email has some issues');
@@ -93,7 +96,9 @@ export const validatePasswordResetToken = async (
     return new Response(JSON.stringify({}), { status: 422 });
   };
 
-  const response = await mockFetch('http://localhost:8000/validate-token');
+  const response = await mockFetch(
+    `${import.meta.env.VITE_API_BASE_URL}/validate-token`,
+  );
 
   if (response.status === 422) {
     throw new ValidationError('This token is invalid or expired');
@@ -118,10 +123,13 @@ export const resetPassword = async (values: {
     return new Response(JSON.stringify({}), { status: 204 });
   };
 
-  const response = await mockFetch('http://localhost:8000/password-reset', {
-    method: 'PUT',
-    body: JSON.stringify(values),
-  });
+  const response = await mockFetch(
+    `${import.meta.env.VITE_API_BASE_URL}/password-reset`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(values),
+    },
+  );
 
   if (response.status === 422) {
     throw new ValidationError('There was something wrong with the password');

@@ -29,7 +29,6 @@ React Router may be used **only** for routing. Any feature it has regarding stat
 3. `src/pages` holds top-level pages. These components are directly referenced in `src/App.tsx` as a route with React Router. For example, a `/dashboard` route would have a `src/pages/Dashboard.tsx` component
 4. `src/types` holds all non-prop custom types of the project
    - Type definitions for component props should go in the component's own file. If the type definition for a certain component's prop is used for multiple components, it should be externalized to its own file. These prop file types should go into `src/types/props`
-   - Type definitions for context providers should be in the context provider's file instead
 5. `src/hooks` contains all custom hooks. More on how to properly code custom hooks later.
 6. `src/services` holds integrations with external services, most notably the main API coded specifically for this project. All logic for fetching data must go strictly in files in this folder. More on this later.
 

@@ -59,7 +59,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     let retryTimeout: ReturnType<typeof setTimeout>;
-    let slowNetworkTimeout: ReturnType<typeof setTimeout>;
+
+    const slowNetworkTimeout = setTimeout(() => {
+      setIsSlowNetwork(true);
+    }, 10000);
 
     const tryLogin = async () => {
       try {
@@ -72,10 +75,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       }
     };
-
-    slowNetworkTimeout = setTimeout(() => {
-      setIsSlowNetwork(true);
-    }, 10000);
 
     tryLogin();
 

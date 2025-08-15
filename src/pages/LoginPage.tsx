@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router';
+import { useToast } from '@/hooks/useToast';
 
 /**
  * The login page component.
@@ -9,18 +10,22 @@ import { useNavigate } from 'react-router';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
   const { login, isLoading } = useAuth();
+  const { createToast } = useToast();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     try {
       await login(email, password);
       navigate('/');
-    } catch (err) {
-      setError('Invalid email or password');
+    } catch {
+      createToast({
+        type: 'ERROR',
+        title: 'Authentication Error',
+        content: 'Invalid email or password',
+        dataCy: 'wrong-credentials'
+      });
     }
   };
 
@@ -51,7 +56,6 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        {error && <p className="text-red-500">{error}</p>}
         <button type="submit">Login</button>
       </form>
       <a href="#" data-cy="forgot-password">

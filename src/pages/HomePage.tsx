@@ -16,4 +16,6 @@ const HomePage = () => {
   );
 };
 
-export default withAuthLoading(HomePage);
+const AuthenticatedHomePage = withAuthLoading(HomePage);
+
+export default AuthenticatedHomePage;

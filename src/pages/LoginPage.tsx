@@ -10,7 +10,7 @@ import { ApiError, ValidationError, ServerError } from '../types/errors';
  * Allows users to log in with test credentials and handles authentication state.
  */
 const LoginPage = () => {
-  const { login, isLoading } = useAuth();
+  const { login } = useAuth();
   const { createToast } = useToast();
   const navigate = useNavigate();
 
@@ -47,10 +47,6 @@ const LoginPage = () => {
     setSubmitting(false);
   };
 
-  if (isLoading) {
-    return <div>Authenticating...</div>;
-  }
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
@@ -74,6 +70,7 @@ const LoginPage = () => {
                   type="email"
                   id="email"
                   name="email"
+                  disabled={isSubmitting}
                   className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
                 <ErrorMessage
@@ -90,6 +87,7 @@ const LoginPage = () => {
                   type="password"
                   id="password"
                   name="password"
+                  disabled={isSubmitting}
                   className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
                 <ErrorMessage

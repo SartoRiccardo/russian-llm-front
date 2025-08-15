@@ -16,7 +16,8 @@ This proect uses:
 
 - **React.js** with **Vite**
 - **Tailwind** for the CSS
-- **React Router v7** for routing. Do **not** install React Router Dom or try to switch libraries. The routing is already set up
+- **React Router v7** for routing. Do **not** install React Router Dom or try to switch libraries. The routing is already set up.
+  - Use React Router's `Link` tag for navigation wherever possible, as it semantically translates to an `a` tag.
 - **Formik** for form validation
 - **Cypress** for testing
 

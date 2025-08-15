@@ -8,9 +8,9 @@ This functionality adds a flow to reset the password without being logged in. Th
 
 # Implementation
 
-**You must mock all API calls**
+**You must mock all API calls**.
 
-If the user is already logged in, all of these routes redirect to `/settings` (which you should not create yet. Just implement the redirect for now).
+If the user is already logged in, all of these routes redirect to `/settings` (which you should not create yet. Just implement the redirect for now). Check the login status with the existing Authentication context implemented in @tasks/1_login.md
 
 ## Forgot Password page
 
@@ -30,11 +30,11 @@ On an unsuccessful response (`4xx`), display "That email has some issues" in an 
 
 ### Initial Load
 
-On load, the page should check via an API call if the token is valid. This is a `GET` request which passes the `token` in the querystring. It return the status code `204` if the token is valid and `422` if it's not. Handle `5xx`s with a toast.
+On load, the page should check via an API call if the token is valid. This is a `GET` request which passes the `token` in the querystring (the field is named `token`). It return the status code `204` if the token is valid and `422` if it's not. Handle `5xx`s with a toast. The response body of these requests, for now, is irrelevant. For testing/mocking purposes, if the token is exactly `valid-token` it is considered valid.
 
 If the response is a `422`, display the message "This token is invalid or expired" on the page, and a button to return to the login.
 
-If it's a `2xx`, display the Change Password form
+If it's a `2xx`, display the Change Password form.
 
 ### Change Password form
 
@@ -49,7 +49,7 @@ Display a form with 2 password fields (Password and Repeat Password). If both pa
 
 This request can return a `204` if it was modified correctly, a `422` on validation error or a `5xx` for server errors. Handle server errors wiht an error toast saying "Server Error".
 
-On a `2xx` response, replace the form with a success message that says "Your password has been changed!" and a "Login" button which takes the user back to the login page.
+On a `2xx` response, replace the form with a success message that says "Your password has been changed!" and a "Login" button which takes the user back to the login page. Use React Router's link tags for this, don't do it programmatically.
 
 On a `422` response, display an error toast saying there was something wrong with the password.
 

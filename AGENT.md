@@ -145,3 +145,23 @@ function someCorrectFunction(
   // Some code...
 }
 ```
+
+# Testing
+
+You do not write tests on your own. You will be instructed to make tests if necessary by pointing to a file which will have the tests already defined and commented, you will only have to write the code inside of them.
+
+You **never** test if the tests work for yourself. That's up to The Superuser to do.
+
+## Selection Rules
+
+Test files **always mention the file they are testing**. Reading that file (and, if needed, components/contexts they import recursively). is **critical** to understanding how selectors should be constructed. Not doing so will result in failure.
+
+- When testing elements in forms, you will have to first select the form via its `data-cy` attribute, then you can grab inputs inside the form via their `name` attribute. There will never be multiple items with the same `name` in the same form.
+- When testing if a toast exists, check if a `data-cy` attribute exists
+- There will never be any element in this projec with an `id` field. Never use that for a selection
+- If you are unsure on how an element is selectable, prompt The Superuser
+- **Never** use class names as selectors, they are volatile and always change
+
+## Mocking API Calls
+
+Calls to APIs should be mocked. Inside the `cypress/fixtures` file you should have one subfolder for every external service requireed (for example, using the YouTube API would need `cypress/fixtures/youtube`). That folder will contain all the fixtures for the YouTube API.

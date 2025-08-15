@@ -1,3 +1,6 @@
+/**
+ * Tests for the login page, implemented in @src/pages/LoginPage.tsx
+ */
 describe('Login Page', () => {
   /**
    * Check that logging in with correct credentials works

@@ -1,4 +1,3 @@
-
 import type { IAuthnSuccessResponse } from '@/types/main';
 
 export const checkLoginStatus = async (): Promise<IAuthnSuccessResponse> => {
@@ -10,7 +9,10 @@ export const checkLoginStatus = async (): Promise<IAuthnSuccessResponse> => {
       } else {
         const sessionExpire = localStorage.getItem('sessionExpire');
         if (sessionExpire && parseInt(sessionExpire, 10) > Date.now()) {
-          resolve({ username: 'testuser', sessionExpire: Date.now() + 3600 * 1000 });
+          resolve({
+            username: 'testuser',
+            sessionExpire: Date.now() + 3600 * 1000,
+          });
         } else {
           reject(new Error('Unauthorized'));
         }
@@ -19,12 +21,18 @@ export const checkLoginStatus = async (): Promise<IAuthnSuccessResponse> => {
   });
 };
 
-export const login = async (email: string, password: string): Promise<IAuthnSuccessResponse> => {
+export const login = async (
+  email: string,
+  password: string,
+): Promise<IAuthnSuccessResponse> => {
   // Mock API call
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (email === 'test@test.com' && password === 'password') {
-        resolve({ username: 'testuser', sessionExpire: Date.now() + 3600 * 1000 });
+        resolve({
+          username: 'testuser',
+          sessionExpire: Date.now() + 3600 * 1000,
+        });
       } else {
         reject(new Error('Invalid credentials'));
       }

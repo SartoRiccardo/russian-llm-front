@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/hooks/useAuth';
 import withAuthLoading from '@/components/hoc/withAuthLoading';
 

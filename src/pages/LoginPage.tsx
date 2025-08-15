@@ -24,7 +24,7 @@ const LoginPage = () => {
         type: 'ERROR',
         title: 'Authentication Error',
         content: 'Invalid email or password',
-        dataCy: 'wrong-credentials'
+        dataCy: 'wrong-credentials',
       });
     }
   };
@@ -36,7 +36,10 @@ const LoginPage = () => {
   return (
     <div>
       <h1>Login</h1>
-      <p>Use email: <strong>test@test.com</strong> and password: <strong>password</strong></p>
+      <p>
+        Use email: <strong>test@test.com</strong> and password:{' '}
+        <strong>password</strong>
+      </p>
       <form onSubmit={handleSubmit} data-cy="f-login">
         <div>
           <label htmlFor="email">Email</label>

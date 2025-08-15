@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router';
@@ -14,7 +13,9 @@ const SLOW_NETWORK_TOAST_ID = 'slow-network-toast';
  * @param WrappedComponent The component to wrap.
  * @returns A new component that displays a loading indicator, redirects, or renders the wrapped component.
  */
-const withAuthLoading = <P extends object>(WrappedComponent: React.ComponentType<P>) => {
+const withAuthLoading = <P extends object>(
+  WrappedComponent: React.ComponentType<P>,
+) => {
   const ComponentWithAuthLoading = (props: P) => {
     const { isLoading, isLoggedIn, isSlowNetwork } = useAuth();
     const { createToast } = useToast();

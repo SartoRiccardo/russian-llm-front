@@ -6,7 +6,7 @@ Orders will be given to you by The Superuser. This file and all instructions are
 
 The tasks to be done for this project are listed in @CHECKLIST.md, with the already-done ones crossed off. You may **never** edit that file, The Superuser will cross off a task when it deems it to be completed. Each task has its corresponding Markdown file in the `tasks/` directory. Each task's file name is its name in @CHECKLIST.md with spaces turned into underscores and non-alphanumeric characters removed. For example, the task "- [ ] 1. Make the website's landing page" will correspond to `1_make_the_websites_landing_page.md`.
 
-Each task file is self-contained and contains all the information you need to complete the task, however it may reference other task files for context. You are to read referenced files recursively if they are required to gather context for a task.
+Each task file is self-contained and contains all the information you need to complete the task, however it may reference other task files for context. You **must** read referenced files recursively if they are mentioned, this is the only way to have all context needed to complete a task.
 
 # Project Stack
 

@@ -77,6 +77,7 @@ const LoginPage = () => {
                   name="email"
                   component="div"
                   className="text-red-500 text-sm mt-1"
+                  data-cy="err-email"
                 />
               </div>
               <div className="mb-6">
@@ -94,6 +95,7 @@ const LoginPage = () => {
                   name="password"
                   component="div"
                   className="text-red-500 text-sm mt-1"
+                  data-cy="err-password"
                 />
               </div>
               <button

@@ -13,7 +13,7 @@ describe('Login Page', () => {
   });
 
   /**
-   * Check that logging in with correct credentials works and redirects to "/".
+   * Check that logging in with correct credentials works and redirects to "/"
    */
   it('logs in successfully', () => {
     cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/login`, {
@@ -48,6 +48,35 @@ describe('Login Page', () => {
     cy.wait('@loginPending');
   });
 
+  /**
+   * Perform a login, then try to visit the page again
+   */
+  it('redirects the user to the home page if visited while logged in', () => {
+    cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/login`, {
+      fixture: 'russian-llm-api/login-success.json',
+      statusCode: 200,
+    }).as('loginSuccess');
+
+    cy.intercept(
+      'GET',
+      `${Cypress.env('VITE_API_BASE_URL')}/check-login-status`,
+      {
+        fixture: 'russian-llm-api/check-login-status-success.json',
+        statusCode: 200,
+      },
+    ).as('checkLoginStatus');
+
+    cy.get('@emailInput').type('test@test.com');
+    cy.get('@passwordInput').type('password');
+    cy.get('@loginForm').submit();
+    cy.wait('@loginSuccess');
+    cy.location('pathname').should('eq', '/');
+
+    cy.visit('/login');
+    cy.wait('@checkLoginStatus');
+    cy.location('pathname').should('eq', '/');
+  });
+
   describe('Handles Errors', () => {
     /**
      * Check that the correct toast appears when submitting with incorrect credentials
@@ -69,19 +98,14 @@ describe('Login Page', () => {
 
     it('can not submit when the fields are empty', () => {
       cy.get('@loginForm').submit();
-      //! Add data-cy attributes to these error messages instead of checking for content
-      cy.get('@loginForm').contains('Email is required').should('be.visible');
-      cy.get('@loginForm')
-        .contains('Password is required')
-        .should('be.visible');
+      cy.get('[data-cy="err-email"]').should('be.visible');
+      cy.get('[data-cy="err-password"]').should('be.visible');
     });
 
     it('can not submit when the email is invalid', () => {
       cy.get('@emailInput').type('invalid-email');
       cy.get('@loginForm').submit();
-      cy.get('@loginForm')
-        .contains('Invalid email address')
-        .should('be.visible');
+      cy.get('[data-cy="err-email"]').should('be.visible');
     });
 
     /**

@@ -48,7 +48,7 @@ export default function ToastProvider({ children }: IToastProviderProps) {
         title: options.title || '',
         content: options.content || '',
         duration,
-        dataCy: options.dataCy,
+        dataCy: options.dataCy?.replace(/^t-/, ''),
       };
 
       const timeoutId = window.setTimeout(() => {

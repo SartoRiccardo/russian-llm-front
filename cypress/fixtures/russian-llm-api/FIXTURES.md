@@ -1,7 +1,5 @@
 # Russian LLM API Fixtures
 
-This document describes the purpose and content of fixture files used for mocking the Russian LLM API.
-
 ## `login-success.json`
 
 Mocks a successful login response.
@@ -10,3 +8,11 @@ Mocks a successful login response.
 - **Used in:**
   - `cypress/e2e/login.cy.js`: Login Page -- logs in successfully
   - `cypress/e2e/login.cy.js`: Login Page -- can not edit the form while submitting
+
+## `check-login-status-success.json`
+
+Mocks a successful check-login-status response.
+
+- **Status Code:** 200 OK
+- **Used in:**
+  - `cypress/e2e/login.cy.js`: Login Page -- redirects the user to the home page if visited while logged in

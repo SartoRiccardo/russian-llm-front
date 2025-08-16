@@ -144,6 +144,7 @@ export function sendData(data: { user: string }): {
 - Some components should be easily selectable for testing in Cypress. These components will be explicitely pointed out in the checklist descriptions, if any. These selections happen through the `data-cy` attribute
   - The `data-cy` attribute should **always** be present in forms, and it should begin with `f-`. For example, a form to submit a support ticket will have `data-cy="f-submit-support-ticket"`
   - If the `data-cy` attribute is not written in the specifications, you can invent one. It should be descriptive and unique across the application
+  - For Formik error validation messages, `data-cy` attributes must start with `err-`
 - You should default to using TypeScript interfaces wherever possible instead of types. Interfaces should begin with `I`, for example: `IUserResponseData`
 - If a type of a function's return type or parameter is an object, it **must** be declared as a type. For example:
 
@@ -187,3 +188,5 @@ Use aliases when referring to elements more than once.
 **Every call to APIs should be done through fixtures**. Inside the `cypress/fixtures` file you should have one subfolder for every external service requireed (for example, using the YouTube API would need `cypress/fixtures/youtube`). That folder will contain all the fixtures for the YouTube API. You will only understand what needs fixtures by reading the code you are writing tests for!
 
 Each folder (unless it doesn't exist and you are making it) always contains a `FIXTURES.md`, which documents each fixture file, describes its purpose, and where it's used. **Always** read that file before making changes to fixtures, as it will tell you in detail all you need to know about the current context. Whenever you make a new fixture or update an existing one, **you can edit this file**.
+
+You don't need fixtures for requests which don't have a response body. Simply omit the response body field!

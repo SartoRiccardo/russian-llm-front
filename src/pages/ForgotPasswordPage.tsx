@@ -33,6 +33,7 @@ const ForgotPasswordPage = () => {
       createToast({
         type: 'ERROR',
         content: errorMessage,
+        dataCy: 't-forgot-password-error',
       });
     }
     setSubmitting(false);
@@ -77,6 +78,7 @@ const ForgotPasswordPage = () => {
                     name="email"
                     component="div"
                     className="text-red-500 text-sm mt-1"
+                    data-cy="err-email"
                   />
                 </div>
                 <button

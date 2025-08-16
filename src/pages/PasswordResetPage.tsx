@@ -7,7 +7,12 @@ import {
   validatePasswordResetToken,
   resetPassword,
 } from '../services/russian-llm-api';
-import { ApiError, ValidationError, ServerError } from '../types/errors';
+import {
+  ApiError,
+  ValidationError,
+  ServerError,
+  InvalidTokenError,
+} from '../types/errors';
 
 type TokenState = 'validating' | 'valid' | 'invalid';
 
@@ -90,6 +95,10 @@ const PasswordResetPage = () => {
       });
       setIsSubmitted(true);
     } catch (error) {
+      if (error instanceof InvalidTokenError) {
+        setTokenState('invalid');
+        return;
+      }
       let errorMessage = 'An unexpected error occurred.';
       if (error instanceof ValidationError) {
         errorMessage = error.message;

@@ -3,7 +3,7 @@ import {
   ApiError,
   ValidationError,
   ServerError,
-  // NetworkError, // Removed as it's not directly used here anymore
+  InvalidTokenError,
 } from '@/types/errors';
 import fetchMock from 'fetch-mock';
 
@@ -227,6 +227,10 @@ export const resetPassword = async (values: {
   );
 
   if (response.status === 422) {
+    const errorBody = await response.json();
+    if (errorBody.token) {
+      throw new InvalidTokenError();
+    }
     throw new ValidationError('There was something wrong with the password');
   }
   if (response.status >= 500) {

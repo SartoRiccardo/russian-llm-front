@@ -25,3 +25,10 @@ export class NetworkError extends ApiError {
     this.name = 'NetworkError';
   }
 }
+
+export class InvalidTokenError extends ValidationError {
+  constructor(message: string = 'Invalid or expired token') {
+    super(message);
+    this.name = 'InvalidTokenError';
+  }
+}

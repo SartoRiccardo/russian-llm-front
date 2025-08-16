@@ -49,6 +49,7 @@ const PasswordResetPage = () => {
         createToast({
           type: 'ERROR',
           content: errorMessage,
+          dataCy: 't-reset-password-error',
         });
       }
     };
@@ -110,6 +111,7 @@ const PasswordResetPage = () => {
       createToast({
         type: 'ERROR',
         content: errorMessage,
+        dataCy: 't-reset-password-error',
       });
     }
     setSubmitting(false);
@@ -123,7 +125,9 @@ const PasswordResetPage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-100">
         <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md text-center">
-          <p>This token is invalid or expired</p>
+          <p data-cy="invalid-token-message">
+            This token is invalid or expired
+          </p>
           <Link
             to="/login"
             className="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -141,10 +145,13 @@ const PasswordResetPage = () => {
         <h2 className="text-2xl font-bold text-center mb-6">Reset Password</h2>
         {isSubmitted ? (
           <div className="text-center">
-            <p>Your password has been changed!</p>
+            <p data-cy="password-changed-message">
+              Your password has been changed!
+            </p>
             <Link
               to="/login"
               className="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              data-cy="login-link-after-reset"
             >
               Login
             </Link>
@@ -171,6 +178,7 @@ const PasswordResetPage = () => {
                     name="password"
                     component="div"
                     className="text-red-500 text-sm mt-1"
+                    data-cy="err-password"
                   />
                 </div>
                 <div className="mb-4">
@@ -190,6 +198,7 @@ const PasswordResetPage = () => {
                     name="repeatPassword"
                     component="div"
                     className="text-red-500 text-sm mt-1"
+                    data-cy="err-repeat-password"
                   />
                 </div>
                 <button

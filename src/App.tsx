@@ -32,7 +32,8 @@ const AppRoutes = () => {
         }
       />
       <Route path="/" element={<HomePage />} />
-      <Route path="home" element={<HomePage />} />
+      <Route path="/home" element={<HomePage />} />
+      <Route path="/settings" element={<div>Not implemented</div>} />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

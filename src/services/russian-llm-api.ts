@@ -70,7 +70,6 @@ if (process.env.NODE_ENV === 'development') {
     async () => {
       return {
         status: 204,
-        body: {},
       };
     },
     { delay: 500 },
@@ -94,21 +93,19 @@ if (process.env.NODE_ENV === 'development') {
       }
       return {
         status: 204,
-        body: {},
       };
     },
     { delay: 500 },
   );
 
   fetchMock.route(
-    `${import.meta.env.VITE_API_BASE_URL}/validate-token*`,
+    new RegExp(`${import.meta.env.VITE_API_BASE_URL}/validate-token.*`),
     async (url: IFetchMockParams) => {
       const urlObj = new URL(url.args[0]);
       const token = urlObj.searchParams.get('token');
       if (token === 'valid-token') {
         return {
           status: 204,
-          body: {},
         };
       }
       return {
@@ -137,7 +134,6 @@ if (process.env.NODE_ENV === 'development') {
       }
       return {
         status: 204,
-        body: {},
       };
     },
     { delay: 500 },

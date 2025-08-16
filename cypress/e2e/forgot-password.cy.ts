@@ -63,6 +63,12 @@ describe('Forgot Password Page', () => {
     cy.wait('@forgotPassword');
   });
 
+  /**
+   * Check that if the user is already logged in navigating to this
+   * page redirects to settings. Use the login helper command.
+   */
+  it('redirects to settings if logged in', () => {});
+
   describe('Handles Errors', () => {
     it('can not submit when the fields are empty', () => {
       cy.visit('/forgot-password');

@@ -29,10 +29,14 @@ const PasswordResetPage = () => {
         await validatePasswordResetToken(token);
         setTokenState('valid');
       } catch (error) {
+        setTokenState('invalid');
+
+        // Do not create a toast if it's just the token being invalid.
+        // Only create it on weird server errors, network errors, etc.
+        if (error instanceof ValidationError) return;
+
         let errorMessage = 'An unexpected error occurred.';
-        if (error instanceof ValidationError) {
-          errorMessage = error.message;
-        } else if (error instanceof ServerError) {
+        if (error instanceof ServerError) {
           errorMessage = 'Server error while validating token';
         } else if (error instanceof ApiError) {
           errorMessage = error.message;
@@ -41,7 +45,6 @@ const PasswordResetPage = () => {
           type: 'ERROR',
           content: errorMessage,
         });
-        setTokenState('invalid');
       }
     };
 

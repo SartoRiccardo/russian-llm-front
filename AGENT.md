@@ -81,34 +81,51 @@ export function sendData(data: DataSend): void {
 
 You may be asked to mock data coming from the backend. When asked to do so, put all mocking logic in the **service file** for that service. This makes maintaining easy because all the app uses an API coming from a single source of truth, and once we are ready to connect the real back-end it's as easy as only changing that file. If the task specifies to implement some error handling logic, mock a fetch response to only have the attributes you need.
 
-When mocking API calls, **create a mock function with identical parameters to the built-in `fetch` function**. This makes writing logic the exact same as if the native `fetch` function was called, which will make switching to the real API really easy. When mocking requests, the schema will always be provided but the URL will probably not be provided. In this case, you are free to invent an URL which will be corrected at a later date. In these cases, the base URL must be `http://localhost:8000`.
+When mocking API calls, use the `fetch-mock` library to mock individual routes. When mocking requests, the schema will always be provided but the URL will probably not be provided. In this case, you are free to invent an URL which will be corrected at a later date. The base URL is always somewhere in the environment variables, look at those and if it doesn't exist teminate the process and ask for it.
 
 For example, if we wanted to mock the backend from the example above, we would leave `SomeComponent.tsx` unchanged and modify `src/services/russian-llm-api.ts` like this:
 
 ```ts
+interface IFetchMockBody {
+  body: string; // JSON-serialized
+  method: 'POST' | 'PUT' | 'DELETE' | 'GET' | 'OPTIONS' | 'PATCH';
+}
+
+type RequestedUrl = string;
+
+interface IFetchMockParams {
+  args: [RequestedUrl, IFetchMockBody];
+}
+
 /**
  * Example instruction: "mock sendData so that if the user is "good-user" it is
  * successful and otherwise it's not. If the request returns a 403 response, return an
  * error saying it is forbidden.
  */
+if (process.env.NODE_ENV === 'development') {
+  fetchMock
+    .mockGlobal()
+    // ...other .route calls...
+    .route(
+      `${import.meta.env.VITE_API_BASE_URL}/login`,
+      async (url: IFetchMockParams) => {
+        const body = JSON.parse(url.args[1].body);
+        return {
+          status: data.user === 'good-user' ? 200 : 403,
+          body: {
+            success: data.user === 'good-user',
+            error: 'It is forbidden!',
+          },
+        };
+      },
+    );
+}
+
 export function sendData(data: { user: string }): {
   success: boolean;
   error?: string;
 } {
-  const mockFetch = async function (url, options) {
-    const { user } = JSON.parse(options);
-    return {
-      status: data.user === 'good-user' ? 200 : 403,
-      json: async function () {
-        return {
-          success: data.user === 'good-user',
-          error: 'It is forbidden!',
-        };
-      },
-    };
-  };
-
-  const response = await mockFetch('http://localhost:8000/made/up/url', {
+  const response = await fetch('http://localhost:8000/made/up/url', {
     method: 'POST',
     body: JSON.stringify(data),
   });
@@ -148,7 +165,7 @@ function someCorrectFunction(
 
 # Testing
 
-You do not write tests on your own. You will be instructed to make tests if necessary by pointing to a file which will have the tests already defined and commented, you will only have to write the code inside of them.
+You do not write tests on your own. You will be instructed to make tests if necessary by pointing to a file which will have the tests already defined and commented, you will only have to write the code inside of them. Leave the comments when you write tests, don't delete them!
 
 You **never** test if the tests work for yourself. That's up to The Superuser to do.
 
@@ -156,12 +173,17 @@ You **never** test if the tests work for yourself. That's up to The Superuser to
 
 Test files **always mention the file they are testing**. Reading that file (and, if needed, components/contexts they import recursively). is **critical** to understanding how selectors should be constructed. Not doing so will result in failure.
 
+Use aliases when referring to elements more than once.
+
 - When testing elements in forms, you will have to first select the form via its `data-cy` attribute, then you can grab inputs inside the form via their `name` attribute. There will never be multiple items with the same `name` in the same form.
+- Submit forms with the `submit()` function, not clicking a button.
 - When testing if a toast exists, check if a `data-cy` attribute exists
 - There will never be any element in this projec with an `id` field. Never use that for a selection
 - If you are unsure on how an element is selectable, prompt The Superuser
 - **Never** use class names as selectors, they are volatile and always change
 
-## Mocking API Calls
+## API Fixtures in tests
 
-Calls to APIs should be mocked. Inside the `cypress/fixtures` file you should have one subfolder for every external service requireed (for example, using the YouTube API would need `cypress/fixtures/youtube`). That folder will contain all the fixtures for the YouTube API.
+**Every call to APIs should be done through fixtures**. Inside the `cypress/fixtures` file you should have one subfolder for every external service requireed (for example, using the YouTube API would need `cypress/fixtures/youtube`). That folder will contain all the fixtures for the YouTube API. You will only understand what needs fixtures by reading the code you are writing tests for!
+
+Each folder (unless it doesn't exist and you are making it) always contains a `FIXTURES.md`, which documents each fixture file, describes its purpose, and where it's used. **Always** read that file before making changes to fixtures, as it will tell you in detail all you need to know about the current context. Whenever you make a new fixture or update an existing one, **you can edit this file**.

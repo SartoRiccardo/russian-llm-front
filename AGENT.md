@@ -8,7 +8,7 @@ The tasks to be done for this project are listed in @CHECKLIST.md, with the alre
 
 Each task file is self-contained and contains all the information you need to complete the task, however it may reference other task files for context. You **must** read referenced files recursively if they are mentioned, this is the only way to have all context needed to complete a task.
 
-To validate if the project works after making changes, run `npm run lint` first and resolve the errors, afterwards run `npm run build` and resolve the errors of that command. Once both commands return without generating errors, you can return from the task.
+To validate if the project works after making changes, run `npm run lint && npm run build` and resolve the errors raised. Once both commands return without generating errors, you can return from the task.
 
 # Project Stack
 

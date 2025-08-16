@@ -16,16 +16,28 @@ describe('Login Page', () => {
    * Check that logging in with correct credentials works and redirects to "/".
    */
   it('logs in successfully', () => {
+    cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/login`, {
+      fixture: 'russian-llm-api/login-success.json',
+      statusCode: 200,
+    }).as('loginSuccess');
+
     cy.get('@emailInput').type('test@test.com');
     cy.get('@passwordInput').type('password');
     cy.get('@loginForm').submit();
-    cy.url().should('eq', `${Cypress.env('BASE_URL')}/`);
+    cy.wait('@loginSuccess');
+    cy.location('pathname').should('eq', '/');
   });
 
   /**
    * Check that the form fields are uneditable while the request is pending
    */
   it('can not edit the form while submitting', () => {
+    cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/login`, {
+      delay: 1000,
+      fixture: 'russian-llm-api/login-success.json',
+      statusCode: 200,
+    }).as('loginPending');
+
     cy.get('@emailInput').type('test@test.com');
     cy.get('@passwordInput').type('password');
     cy.get('@loginForm').submit();
@@ -33,6 +45,7 @@ describe('Login Page', () => {
     cy.get('@emailInput').should('be.disabled');
     cy.get('@passwordInput').should('be.disabled');
     cy.get('@submitButton').should('be.disabled');
+    cy.wait('@loginPending');
   });
 
   describe('Handles Errors', () => {
@@ -40,9 +53,14 @@ describe('Login Page', () => {
      * Check that the correct toast appears when submitting with incorrect credentials
      */
     it('displays a toast when the credentials are incorrect', () => {
+      cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/login`, {
+        statusCode: 422,
+      }).as('loginIncorrectCredentials');
+
       cy.get('@emailInput').type('wrong@test.com');
       cy.get('@passwordInput').type('wrongpassword');
       cy.get('@loginForm').submit();
+      cy.wait('@loginIncorrectCredentials');
 
       cy.get('[data-cy="t-wrong-credentials"]').as('errorToast');
       cy.get('@errorToast').should('be.visible');
@@ -50,7 +68,7 @@ describe('Login Page', () => {
         .contains('Authentication Error')
         .should('be.visible');
       cy.get('@errorToast')
-        .contains('An unexpected error occurred.')
+        .contains('Invalid credentials')
         .should('be.visible');
     });
 
@@ -76,9 +94,8 @@ describe('Login Page', () => {
      */
     it('displays a toast on server errors', () => {
       // Mock a server error response
-      cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/api/login`, {
+      cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/login`, {
         statusCode: 500,
-        body: { message: 'Internal Server Error' },
       }).as('loginServerError');
 
       cy.get('@emailInput').type('test@test.com');
@@ -99,7 +116,7 @@ describe('Login Page', () => {
      */
     it('displays a toast on network errors', () => {
       // Mock a network error
-      cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/api/login`, {
+      cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/login`, {
         forceNetworkError: true,
       }).as('loginNetworkError');
 
@@ -107,6 +124,7 @@ describe('Login Page', () => {
       cy.get('@passwordInput').type('password');
       cy.get('@loginForm').submit();
       cy.wait('@loginNetworkError');
+
       cy.get('[data-cy="t-wrong-credentials"]').as('errorToast');
       cy.get('@errorToast').should('be.visible');
       cy.get('@errorToast')

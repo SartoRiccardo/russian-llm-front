@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "serve:test": "(cd dist && php -S russian-llm.localhost:3000 server.php)",
     "lint": "eslint . && npx prettier . --write",
     "preview": "vite preview"
   },

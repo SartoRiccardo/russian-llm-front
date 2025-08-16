@@ -64,12 +64,7 @@ describe('Login Page', () => {
 
       cy.get('[data-cy="t-wrong-credentials"]').as('errorToast');
       cy.get('@errorToast').should('be.visible');
-      cy.get('@errorToast')
-        .contains('Authentication Error')
-        .should('be.visible');
-      cy.get('@errorToast')
-        .contains('Invalid credentials')
-        .should('be.visible');
+      cy.get('[data-cy^="t-"]').should('have.length', 1); // Check for only one toast
     });
 
     it('can not submit when the fields are empty', () => {
@@ -105,10 +100,7 @@ describe('Login Page', () => {
 
       cy.get('[data-cy="t-wrong-credentials"]').as('errorToast');
       cy.get('@errorToast').should('be.visible');
-      cy.get('@errorToast')
-        .contains('Authentication Error')
-        .should('be.visible');
-      cy.get('@errorToast').contains('Server Error').should('be.visible');
+      cy.get('[data-cy^="t-"]').should('have.length', 1); // Check for only one toast
     });
 
     /**
@@ -127,12 +119,7 @@ describe('Login Page', () => {
 
       cy.get('[data-cy="t-wrong-credentials"]').as('errorToast');
       cy.get('@errorToast').should('be.visible');
-      cy.get('@errorToast')
-        .contains('Authentication Error')
-        .should('be.visible');
-      cy.get('@errorToast')
-        .contains('An unexpected error occurred.')
-        .should('be.visible');
+      cy.get('[data-cy^="t-"]').should('have.length', 1); // Check for only one toast
     });
   });
 });

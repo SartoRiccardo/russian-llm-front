@@ -44,14 +44,18 @@ const ForgotPasswordPage = () => {
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center mb-6">Forgot Password</h2>
         {isSubmitted ? (
-          <div className="text-center">
-            <p>
+          <div
+            className="text-center"
+            data-cy="forgot-password-success-message-container"
+          >
+            <p data-cy="forgot-password-success-message">
               If the email exists, you will receive instructions on how to reset
               the password.
             </p>
             <Link
               to="/login"
               className="mt-4 inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              data-cy="forgot-password-login-link"
             >
               Login
             </Link>

@@ -29,13 +29,17 @@
 Cypress.Commands.add('login', () => {
   const now = new Date();
   const future = new Date(now.getTime() + 3600 * 1000); // 1 hour from now
-  localStorage.setItem('sessionexpire', future.toISOString());
+  localStorage.setItem('sessionExpire', future.getTime().toString());
 
-  cy.intercept('GET', '**/check-login-status', {
-    statusCode: 200,
-    body: {
-      username: 'testuser',
-      sessionExpire: Date.now() + 3600 * 1000,
+  cy.intercept(
+    'GET',
+    `${Cypress.env('VITE_API_BASE_URL')}/check-login-status`,
+    {
+      statusCode: 200,
+      body: {
+        username: 'testuser',
+        sessionExpire: future.getTime(),
+      },
     },
-  }).as('checkLoginStatus');
+  ).as('checkLoginStatus');
 });

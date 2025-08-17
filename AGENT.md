@@ -4,9 +4,11 @@ This codebase is a web app to learn russian in a quiz-style manner.
 
 Orders will be given to you by The Superuser. This file and all instructions are written by The Superuser. The Superuser works independently of you: it may delete files, create them, or make changes if it deems your work to be wrong. Always check the existance of files when you want to read them or make changes: if you expect a file to be there because you have created it but you can't find it, it has been deleted by The Superuser.
 
-The tasks to be done for this project are listed in @CHECKLIST.md, with the already-done ones crossed off. You may **never** edit that file, The Superuser will cross off a task when it deems it to be completed. Each task has its corresponding Markdown file in the `tasks/` directory. Each task's file name is its name in @CHECKLIST.md with spaces turned into underscores and non-alphanumeric characters removed. For example, the task "- [ ] 1. Make the website's landing page" will correspond to `1_make_the_websites_landing_page.md`.
+The tasks to be done for this project are listed in @CHECKLIST.md with the already-done ones crossed off. You may **never** edit that file, The Superuser will cross off a task when it deems it to be completed. Each task has its corresponding Markdown file in the `tasks/` directory. Each task's file name is its name in @CHECKLIST.md with spaces turned into underscores and non-alphanumeric characters removed. For example, the task "- [ ] 1. Make the website's landing page" will correspond to `1_make_the_websites_landing_page.md`.
 
-Each task file is self-contained and contains all the information you need to complete the task, however it may reference other task files for context. You are to read referenced files recursively if they are required to gather context for a task.
+Each task file is self-contained and contains all the information you need to complete the task, however it may reference other task files for context. You **must** read referenced files recursively if they are mentioned, this is the only way to have all context needed to complete a task.
+
+To validate if the project works after making changes, run `npm run lint && npm run build` and resolve the errors raised. Once both commands return without generating errors, you can return from the task.
 
 # Project Stack
 
@@ -15,6 +17,8 @@ This proect uses:
 - **React.js** with **Vite**
 - **Tailwind** for the CSS
 - **React Router v7** for routing. Do **not** install React Router Dom or try to switch libraries. The routing is already set up.
+  - Use React Router's `Link` tag for navigation wherever possible, as it semantically translates to an `a` tag.
+- **Formik** for form validation
 - **Cypress** for testing
 
 React Router may be used **only** for routing. Any feature it has regarding state **should never be used**. For managing state, use React Contexts (more on this later).
@@ -28,11 +32,14 @@ React Router may be used **only** for routing. Any feature it has regarding stat
    - Type definitions for component props should go in the component's own file. If the type definition for a certain component's prop is used for multiple components, it should be externalized to its own file. These prop file types should go into `src/types/props`
 5. `src/hooks` contains all custom hooks. More on how to properly code custom hooks later.
 6. `src/services` holds integrations with external services, most notably the main API coded specifically for this project. All logic for fetching data must go strictly in files in this folder. More on this later.
+7. `src/errors` contains custom, user-defined errors. Useful in conjunction with the APIs in `src/services` to throw errors whenever something with the request goes wrong.
 
 ## Component Structure
 
-- Contexts should go in `components/contexts`
+- Contexts providers should go in `components/contexts`. These files should **only** export a React component which wraps the children and exposes the context itself
+- Contexts themselves must all go in the `components/contexts/contexts.ts`. This file contains all `createContext` calls
 - Input-related components that do very simple things (for example, a simple button or a styled textarea) should go in `components/inputs`
+- Simple UI components such as toasts, panels, containers, and similar should go in `components/ui`
 - Other components should go in `components/other`
 
 # Services
@@ -74,27 +81,55 @@ export function sendData(data: DataSend): void {
 
 You may be asked to mock data coming from the backend. When asked to do so, put all mocking logic in the **service file** for that service. This makes maintaining easy because all the app uses an API coming from a single source of truth, and once we are ready to connect the real back-end it's as easy as only changing that file. If the task specifies to implement some error handling logic, mock a fetch response to only have the attributes you need.
 
+When mocking API calls, use the `fetch-mock` library to mock individual routes. When mocking requests, the schema will always be provided but the URL will probably not be provided. In this case, you are free to invent an URL which will be corrected at a later date. The base URL is always somewhere in the environment variables, look at those and if it doesn't exist teminate the process and ask for it.
+
 For example, if we wanted to mock the backend from the example above, we would leave `SomeComponent.tsx` unchanged and modify `src/services/russian-llm-api.ts` like this:
 
 ```ts
+interface IFetchMockBody {
+  body: string; // JSON-serialized
+  method: 'POST' | 'PUT' | 'DELETE' | 'GET' | 'OPTIONS' | 'PATCH';
+}
+
+type RequestedUrl = string;
+
+interface IFetchMockParams {
+  args: [RequestedUrl, IFetchMockBody];
+}
+
 /**
  * Example instruction: "mock sendData so that if the user is "good-user" it is
  * successful and otherwise it's not. If the request returns a 403 response, return an
  * error saying it is forbidden.
  */
+if (process.env.NODE_ENV === 'development') {
+  fetchMock
+    .mockGlobal()
+    // ...other .route calls...
+    .route(
+      `${import.meta.env.VITE_API_BASE_URL}/login`,
+      async (url: IFetchMockParams) => {
+        const body = JSON.parse(url.args[1].body);
+        return {
+          status: data.user === 'good-user' ? 200 : 403,
+          body: {
+            success: data.user === 'good-user',
+            error: 'It is forbidden!',
+          },
+        };
+      },
+    );
+}
+
 export function sendData(data: { user: string }): {
   success: boolean;
   error?: string;
 } {
-  const mockFetch = async function () {
-    return { status: 200 };
-  };
-
-  const response = await mockFetch();
-  if (response.status === 403)
-    return { success: false, error: 'It is forbidden!' };
-
-  return { success: data.user === 'good-user' };
+  const response = await fetch('http://localhost:8000/made/up/url', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+  return await response.json();
 }
 ```
 
@@ -109,6 +144,7 @@ export function sendData(data: { user: string }): {
 - Some components should be easily selectable for testing in Cypress. These components will be explicitely pointed out in the checklist descriptions, if any. These selections happen through the `data-cy` attribute
   - The `data-cy` attribute should **always** be present in forms, and it should begin with `f-`. For example, a form to submit a support ticket will have `data-cy="f-submit-support-ticket"`
   - If the `data-cy` attribute is not written in the specifications, you can invent one. It should be descriptive and unique across the application
+  - For Formik error validation messages, `data-cy` attributes must start with `err-`
 - You should default to using TypeScript interfaces wherever possible instead of types. Interfaces should begin with `I`, for example: `IUserResponseData`
 - If a type of a function's return type or parameter is an object, it **must** be declared as a type. For example:
 
@@ -127,3 +163,30 @@ function someCorrectFunction(
   // Some code...
 }
 ```
+
+# Testing
+
+You do not write tests on your own. You will be instructed to make tests if necessary by pointing to a file which will have the tests already defined and commented, you will only have to write the code inside of them. Leave the comments when you write tests, don't delete them!
+
+You **never** test if the tests work for yourself. That's up to The Superuser to do.
+
+## Selection Rules
+
+Test files **always mention the file they are testing**. Reading that file (and, if needed, components/contexts they import recursively). is **critical** to understanding how selectors should be constructed. Not doing so will result in failure.
+
+Use aliases when referring to elements more than once.
+
+- When testing elements in forms, you will have to first select the form via its `data-cy` attribute, then you can grab inputs inside the form via their `name` attribute. There will never be multiple items with the same `name` in the same form.
+- Submit forms with the `submit()` function, not clicking a button.
+- When testing if a toast exists, check if a `data-cy` attribute exists
+- There will never be any element in this projec with an `id` field. Never use that for a selection
+- If you are unsure on how an element is selectable, prompt The Superuser
+- **Never** use class names as selectors, they are volatile and always change
+
+## API Fixtures in tests
+
+**Every call to APIs should be done through fixtures**. Inside the `cypress/fixtures` file you should have one subfolder for every external service requireed (for example, using the YouTube API would need `cypress/fixtures/youtube`). That folder will contain all the fixtures for the YouTube API. You will only understand what needs fixtures by reading the code you are writing tests for!
+
+Each folder (unless it doesn't exist and you are making it) always contains a `FIXTURES.md`, which documents each fixture file, describes its purpose, and where it's used. **Always** read that file before making changes to fixtures, as it will tell you in detail all you need to know about the current context. Whenever you make a new fixture or update an existing one, **you can edit this file**.
+
+You don't need fixtures for requests which don't have a response body. Simply omit the response body field!

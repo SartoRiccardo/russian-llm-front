@@ -1,0 +1,108 @@
+# 25083102. Stats Page
+
+The stats page should display a user's Russian stats in a nice fashion.
+
+# Implementation
+
+**Mock all API calls as per project specifications**
+
+The stats page should make a GET request to an endpoint in the Russian LLM API (you invent the URL). This request will have the following schema:
+
+```ts
+// Type names are examples
+
+interface ISkillSchema {
+  id: 'reading' | 'speaking' | 'listening' | 'writing';
+  mastery: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+}
+
+interface IWordRule {
+  id: number;
+  rule: string;
+}
+
+interface IWordSubcategory {
+  id: string;
+  mastery: number; // A number guaranteed to be between 0 and 4, included.
+  rules: IWordRule[];
+}
+
+interface IWordSkillSchema {
+  id: string; // Word type is something like "verb", "noun", ... but do not type it as an enum.
+  mastery: number; // A number guaranteed to be between 0 and 4, included.
+  subcategories: IWordSubcategory[];
+}
+
+interface IRequestReturnType {
+  language_skills: ISkillSchema[];
+  word_skills: IWordSkillSchema[];
+}
+```
+
+The main page, `/stats`, displays every one of the `language_skills` (they are already sorted). At the bottom of the page, there should be a `Vocabulary` link which takes you to the `/vocabulary` page, which displays all the `word_skills`. Each one of them displays the word type itself (equivalent to the `id`), and its mastery next to it. Clicking on a word type makes a section fade in where it displays all of its subcategories and their respective mastery levels. Then, clicking one of the subcategories displays a modal which shows the rules for the subcategory. The rules are markdown-formatted strings.
+
+Make components for word types, word subcategories, and the modal that shows up. The contents of the modal should be its own component, as the rules component will be used in a future task.
+
+Note that this GET request should also go off if visiting `/vocabulary` directly, as it depends on that data.
+
+**Error handling:** On the stats page, handle errors the same way they're handled in @tasks/25083101_exercises_page.md
+On the vocabulary page, if the request returns a `5xx`, do an exponential backoff instead and show an error toast instead.
+
+## Stats and Vocabulary context
+
+Create a context that will wrap all routes that will be named `StatsContext`. This context exposes the following:
+
+```ts
+interface _ {
+  /* Everything in IRequestReturnType */
+  isLoadingStats: boolean;
+  lastLoadedAt: Date | null;  // When the data was successfully loaded
+  loadStats: async (): null;  // Handles the API call and as much logic as it can behind it, pretty much.
+}
+```
+
+## Modals
+
+Make a generic `Modal` component that accepts the following props:
+
+```ts
+interface SchemaModalProps {
+  show: boolean;
+  onShow: (): unknown; // Triggered after the show animation started (show has just turned `true` when it was `false`).
+  onShown: (): unknown; // Triggered after the show animation has ended
+  onHide: (): unknown; // Triggered after the hide animation started (show has just turned `false` when it was `true`), or when an action happened that makes the modal close (e.g. click outside the background).
+  onUnmount: (): unknown; // Triggered when the hide animation has ended.
+}
+```
+
+It just renders its children on top of a black 50% opacity background. When the background is clicked it automatically hides the modal. You are kinda free on the implementation as long as it pretty much does standard modal stuff, supports some kind of animation for show/hide and can render any arbitrary children with no restrictions on styling.
+
+The modal for the rules should use this generic component. The modal for the rules should be its own component that uses this component. The modal should have a `data-cy=modal` attribute.
+
+# Tests
+
+1. **Page loads correctly**
+   - Mock a successful API call. Use a fixture.
+   - Check that everything is visible correctly
+   - Check that the levels match what's said in the API.
+2. **Clicking the words link takes you to the words page**
+   - The clickable element should be selectable via `data-cy=words-link`.
+   - Check that the page is successfully rendered (the word types and masteries are correctly shown)
+3. **Unauthorized while fetching an exercise**
+   - Check that if the user becomes unauthorized while fetching the exercise list (for example, if the token has expired), they are redirected to the login page.
+   - Log in with sample credentials (use one of the fixtures that already exist in @cypress/e2e/login.cy.ts)
+   - Check that the page you are in corresponds to the one you were previously logged out on.
+4. **Server Error**
+   - Check that if there is a server error (error code is `5xx`) the error page shows up, which you should be able to check with the `data-cy=page-error` selector.
+5. **Server Error on Vocabulary page**
+   - Check that if there is a server error (error code is `5xx`) the error toast shows up and the request is retried after a few seconds.
+6. **Network Error**
+   - Simulate a network error for 3 seconds and make sure the browser requests the endpoint twice. After the second time, stop simulating the network error and test that the page renders as expected. Use the same fixture you used for the test specified in point 1.
+7. **Modal Test**
+   - In the words page, clicking a word category and a word subcategory displays the modal which shows the rules for that subcategory. Check both that the modal is present and that the correct rules show up.
+8. **Subcategory section expands correctly**
+   - Mock a successful API call and navigate to the `/vocabulary` page.
+   - Give word skill items a `data-cy=word-skill` attribute.
+   - Click on a word skill item.
+   - Check that the subcategory section for that skill becomes visible. Give it a `data-cy=subcategory-section` attribute.
+   - Verify that the subcategories listed inside are correct and display their mastery level.

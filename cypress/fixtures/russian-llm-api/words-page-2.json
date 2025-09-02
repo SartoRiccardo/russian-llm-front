@@ -1,0 +1,72 @@
+{
+  "words": [
+    {
+      "word_ru": "машина",
+      "word_en": "car",
+      "category": "transport",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "машина",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.8,
+          "subcategory": "nominative",
+          "rules": [4]
+        },
+        {
+          "name": "Genitive",
+          "group": "Cases",
+          "word_ru": "машины",
+          "word_ru_prefix": "",
+          "sort_order": 2,
+          "win_percent": 0.7,
+          "subcategory": "genitive",
+          "rules": [5]
+        },
+        {
+          "name": "Accusative",
+          "group": "Cases",
+          "word_ru": "машину",
+          "word_ru_prefix": "",
+          "sort_order": 4,
+          "win_percent": 0.75,
+          "subcategory": "accusative",
+          "rules": [6]
+        }
+      ]
+    },
+    {
+      "word_ru": "самолет",
+      "word_en": "airplane",
+      "category": "transport",
+      "locked": true,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "самолет",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.6,
+          "subcategory": "nominative",
+          "rules": [4]
+        },
+        {
+          "name": "Genitive",
+          "group": "Cases",
+          "word_ru": "самолета",
+          "word_ru_prefix": "",
+          "sort_order": 2,
+          "win_percent": 0.5,
+          "subcategory": "genitive",
+          "rules": [5]
+        }
+      ]
+    }
+  ]
+}

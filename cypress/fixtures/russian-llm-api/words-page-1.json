@@ -1,0 +1,112 @@
+{
+  "words": [
+    {
+      "word_ru": "кофе",
+      "word_en": "coffee",
+      "category": "food",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.9,
+          "subcategory": "nominative",
+          "rules": [4]
+        },
+        {
+          "name": "Genitive",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 2,
+          "win_percent": 0.8,
+          "subcategory": "genitive",
+          "rules": [5]
+        },
+        {
+          "name": "Dative",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 3,
+          "win_percent": 0.7,
+          "subcategory": "dative",
+          "rules": []
+        },
+        {
+          "name": "Accusative",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 4,
+          "win_percent": 0.85,
+          "subcategory": "accusative",
+          "rules": [6]
+        },
+        {
+          "name": "Instrumental",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 5,
+          "win_percent": 0.6,
+          "subcategory": "instrumental",
+          "rules": []
+        },
+        {
+          "name": "Prepositional",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "о",
+          "sort_order": 6,
+          "win_percent": 0.65,
+          "subcategory": "prepositional",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "чай",
+      "word_en": "tea",
+      "category": "food",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "чай",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.95,
+          "subcategory": "nominative",
+          "rules": [4]
+        },
+        {
+          "name": "Genitive",
+          "group": "Cases",
+          "word_ru": "чая",
+          "word_ru_prefix": "",
+          "sort_order": 2,
+          "win_percent": 0.9,
+          "subcategory": "genitive",
+          "rules": [5]
+        },
+        {
+          "name": "Accusative",
+          "group": "Cases",
+          "word_ru": "чай",
+          "word_ru_prefix": "",
+          "sort_order": 4,
+          "win_percent": 0.92,
+          "subcategory": "accusative",
+          "rules": [6]
+        }
+      ]
+    }
+  ]
+}

@@ -25,7 +25,6 @@ interface _IWordVariant {
 interface _WordReturnSchema {
   word_ru: string;
   word_en: string;
-  win_percent: number; // Guaranteed to be between 0 and 1, included
   category: string;
   locked: boolean;
   type: string; // This matches the word type ID in @tasks/25083101_stats_page.md
@@ -41,7 +40,7 @@ The page loads page 1 by default, then when the user is scrolling at the end it 
 
 Store all loaded words in a state variable in a parent component that is rendered in the `/vocabulary` page. This component renders directly the loader component. The loader component exposes a `onWordsLoaded: (page: number, wordlist: _IReturnType): void` prop which is bound to a handler that updates that state and adds the words. It also takes a `page` prop which is the page to actually load.
 
-For the rendering of the words themselves: They should first be grouped by `category`, preserving the order in which the categories are found, and within the categories they should be sorted by `locked` (`true` last), then by `win_percent` (highest first), and lastly alphabetically. Initially, only show the word category with a win percentage calculated as the average win percentage of the non-locked words. When the word category is clicked, expand the category with a section that appears and fades-in (like @tasks/25083101_stats_page.md) which actually shows the words.
+For the rendering of the words themselves: They should first be grouped by `category`, preserving the order in which the categories are found, and within the categories they should be sorted by `locked` (`true` last), then by `win_percent` (highest first, this is a field that is calculated client-side by averaging the `win_percent`s of the children), and lastly alphabetically. Initially, only show the word category with a win percentage calculated as the average win percentage of the non-locked words. When the word category is clicked, expand the category with a section that appears and fades-in (like @tasks/25083101_stats_page.md) which actually shows the words.
 
 The words have 3 columns: The first one shows the word in russian, the second one the word in english, the third shows the win percentage and a little info button. The info button will show a modal (reuse the component we have) which shows that word + every single variant. For every variant display the prefix + the word itself and, to the right, the win percentage and a question mark button. Group every word variant by group, and sort by `sort_order` within the group (ascending).
 
@@ -80,7 +79,7 @@ In a `vocabulary.cy.ts` file, you should test the following.
 
     - Mock a successful API call for the words list. (Use a previously used fixture).
     - Click on a word category.
-    - Check that the section expands and the words within it are now visible. Each word row should have a `data-cy=word-item` attribute.
+    - Check that the section expands and the words within it are now visible. Each word row should have a `data-cy=word-item` attribute. The Russian word itself should have a `data-cy=word-ru` attribute.
 
 3.  **Info modal shows word variants**
 
@@ -92,7 +91,7 @@ In a `vocabulary.cy.ts` file, you should test the following.
 4.  **Rules modal shows correct highlighted rules and back button works**
 
     - From the open info modal, click the question mark button on a variant (`data-cy=variant-rules-button`).
-    - Verify that the modal's content is replaced by the rules component.
+    - Verify that the modal's content is replaced by the rules component (`data-cy="grammar-rules"`).
     - Check that the rules associated with the variant are displayed and are highlighted (`data-cy=highlighted-rule`).
     - Click the "back" button (`data-cy=modal-back-button` inside the modal selector).
     - Check that the modal content reverts to showing the previous word variants list.

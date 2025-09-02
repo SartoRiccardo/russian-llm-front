@@ -106,3 +106,11 @@ The modal for the rules should use this generic component. The modal for the rul
    - Click on a word skill item.
    - Check that the subcategory section for that skill becomes visible. Give it a `data-cy=subcategory-section` attribute.
    - Verify that the subcategories listed inside are correct and display their mastery level.
+
+**Note on Selectors:**
+- The container for the language skills list on the `/stats` page should have `data-cy="skill-list"`.
+- Each item in the language skills list should have `data-cy="skill-item"`.
+- The server error toast on the `/vocabulary` page should have `data-cy="t-vocab-server-error"`.
+- The container for rules shown in a modal should have `data-cy="grammar-rules"`.
+- Each individual rule in that container should have `data-cy="rule-item"`.
+- Each individual subcategory item should have `data-cy="subcategory-${id}"`.

@@ -72,3 +72,9 @@ In a `exercises-page.cy.ts` page, you should test the following.
    - Check that if there is a server error (error code is `5xx`) the error page shows up, which you should be able to check with the `data-cy=page-error` selector.
 5. **Network Error**
    - Simulate a network error for 3 seconds and make sure the browser requests the endpoint twice. After the second time, stop simulating the network error and test that the page renders as expected. Use the same fixture you used for the test specified in point 1.
+
+**Note on Selectors:**
+
+- The parent container for all exercise groups should have `data-cy="exercise-container"`.
+- Each individual exercise component should have both `data-cy="exercise-${id}"` (e.g., `exercise-1`) and `data-cy-type="${type}"` (e.g., `alphabet`).
+- Group containers have a `data-cy="exercise-container"` attribute

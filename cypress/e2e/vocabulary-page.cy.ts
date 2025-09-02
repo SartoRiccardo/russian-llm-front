@@ -13,9 +13,6 @@ describe('Vocabulary Page', () => {
     cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/words?page=3`, {
       fixture: 'russian-llm-api/words-page-3.json',
     }).as('getWordsPage3');
-    cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/words?page=4`, {
-      fixture: 'russian-llm-api/words-page-4.json',
-    }).as('getWordsPage4');
   });
 
   describe('Happy Path', () => {
@@ -34,8 +31,6 @@ describe('Vocabulary Page', () => {
       cy.wait('@getWordsPage3');
       cy.get('[data-cy=word-category]').should('have.length', 3);
 
-      cy.get('[data-cy=loader]').scrollIntoView();
-      cy.wait('@getWordsPage4');
       cy.get('[data-cy=loader]').should('not.exist');
     });
 

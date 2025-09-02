@@ -33,10 +33,11 @@ interface _WordReturnSchema {
 
 interface _IReturnType {
   words: _WordReturnSchema[];
+  pages: number; // Total page count
 }
 ```
 
-The page loads page 1 by default, then when the user is scrolling at the end it loads the next page, and so on to make an infinite scrolling effect. You do this via a loading component which shows a loading state, and when it comes into view you fire off the GET request and load it + the next loader.
+The page loads page 1 by default, then when the user is scrolling at the end it loads the next page, and so on to make an infinite scrolling effect. You do this via a loading component which shows a loading state, and when it comes into view you fire off the GET request and load it + the next loader. The next loader does not appear if it would go over the max number of pages.
 
 Store all loaded words in a state variable in a parent component that is rendered in the `/vocabulary` page. This component renders directly the loader component. The loader component exposes a `onWordsLoaded: (page: number, wordlist: _IReturnType): void` prop which is bound to a handler that updates that state and adds the words. It also takes a `page` prop which is the page to actually load.
 

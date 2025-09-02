@@ -108,6 +108,7 @@ The modal for the rules should use this generic component. The modal for the rul
    - Verify that the subcategories listed inside are correct and display their mastery level.
 
 **Note on Selectors:**
+
 - The container for the language skills list on the `/stats` page should have `data-cy="skill-list"`.
 - Each item in the language skills list should have `data-cy="skill-item"`.
 - The server error toast on the `/vocabulary` page should have `data-cy="t-vocab-server-error"`.

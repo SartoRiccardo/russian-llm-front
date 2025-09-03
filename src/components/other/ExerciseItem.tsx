@@ -20,7 +20,8 @@ const ExerciseItem = ({ exercise }: IExerciseItemProps) => {
           ? 'bg-gray-200 cursor-not-allowed'
           : 'bg-white hover:shadow-md'
       }`}
-      data-cy={`exercise-${exercise.id}`}
+      data-cy="exercise"
+      data-cy-id={exercise.id}
       data-cy-type={exercise.type}
       data-locked={exercise.locked}
       title={exercise.locked ? 'This component is locked.' : undefined}

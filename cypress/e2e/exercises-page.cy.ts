@@ -17,17 +17,21 @@ describe('Exercises Page', () => {
       // The first group should be Alphabet
       cy.get('@container')
         .eq(0)
-        .find('[data-cy-type=alphabet]')
+        .find('[data-cy=exercise][data-cy-type=alphabet]')
         .should('have.length', 2);
 
       // The second group should be Grammar
       cy.get('@container')
         .eq(1)
-        .find('[data-cy-type=grammar]')
+        .find('[data-cy=exercise][data-cy-type=grammar]')
         .should('have.length', 2);
 
       // Check that the locked exercise is handled correctly
-      cy.get('[data-cy=exercise-4]').should('have.attr', 'data-locked', 'true');
+      cy.get('[data-cy=exercise][data-cy-id="4"]').should(
+        'have.attr',
+        'data-locked',
+        'true',
+      );
     });
 
     it('navigates to an exercise page when clicked', () => {
@@ -35,7 +39,7 @@ describe('Exercises Page', () => {
       cy.wait('@getExercises');
 
       // Click on the first exercise (id 1)
-      cy.get('[data-cy=exercise-1]').click();
+      cy.get('[data-cy=exercise][data-cy-id="1"]').click();
       cy.url().should('include', '/exercises/1');
     });
   });
@@ -59,7 +63,7 @@ describe('Exercises Page', () => {
       cy.tick(2000);
       cy.wait('@getExercisesSuccess');
 
-      cy.get('[data-cy^=exercise-]').should('have.length', 4);
+      cy.get('[data-cy=exercise]').should('have.length', 4);
     });
 
     it('shows an error page on server errors', () => {
@@ -93,7 +97,7 @@ describe('Exercises Page', () => {
       // Should be redirected back
       cy.url().should('include', '/exercises');
       cy.wait('@getExercises');
-      cy.get('[data-cy^=exercise-]').should('have.length', 4);
+      cy.get('[data-cy=exercise]').should('have.length', 4);
     });
   });
 });

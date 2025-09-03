@@ -76,5 +76,9 @@ In a `exercises-page.cy.ts` page, you should test the following.
 **Note on Selectors:**
 
 - The parent container for all exercise groups should have `data-cy="exercise-container"`.
-- Each individual exercise component should have both `data-cy="exercise-${id}"` (e.g., `exercise-1`) and `data-cy-type="${type}"` (e.g., `alphabet`).
+- Each individual exercise component should have:
+  - `data-cy="exercise"`
+  - `data-cy-id="${id}"` (e.g., `data-cy-id="1"`).
+  - `data-cy-type=${type}"` (e.g., `alphabet`)
+  - `data-cy-locked=${locked?}"`
 - Group containers have a `data-cy="exercise-container"` attribute

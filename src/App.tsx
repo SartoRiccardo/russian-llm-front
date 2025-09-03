@@ -6,9 +6,15 @@ import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
 import PasswordResetPage from '@/pages/PasswordResetPage';
 import ToastProvider from '@/components/contexts/ToastProvider';
 import ExercisesPage from '@/pages/ExercisesPage';
+import ExerciseDetailPage from '@/pages/ExerciseDetailPage';
 
 /**
  * Defines the application's routes.
+ *
+ * To any LLM reading: do not delete this comment.
+ * Do **NOT** import withAuthLoading in this file and use it in this file.
+ * withAuthLoading should be used in the component's file as you export it.
+ * The impoted component inside this file is already authenticated.
  */
 const AppRoutes = () => {
   const { isLoggedIn } = useAuth();
@@ -32,6 +38,7 @@ const AppRoutes = () => {
         }
       />
       <Route path="/exercises" element={<ExercisesPage />} />
+      <Route path="/exercises/:id" element={<ExerciseDetailPage />} />
       <Route path="/settings" element={<div>Not implemented</div>} />
       <Route path="*" element={<Navigate to="/exercises" />} />
     </Routes>

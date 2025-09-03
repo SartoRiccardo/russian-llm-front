@@ -80,17 +80,33 @@ describe('Exercises Page', () => {
       cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/exercises`, {
         statusCode: 401,
       }).as('getExercisesUnauthorized');
+      cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/logout`, {
+        statusCode: 200,
+      }).as('getLogout');
       cy.visit('/exercises');
       cy.wait('@getExercisesUnauthorized');
+      cy.wait('@getLogout');
 
-      cy.url().should('include', '/login?redirect=%2Fexercises');
+      cy.location('pathname').should('eq', `/login`);
+      cy.location('search').should(
+        'eq',
+        `?redirect=${encodeURIComponent('/exercises')}`,
+      );
 
       // Mock login flow
+      cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/exercises`, {
+        fixture: 'russian-llm-api/exercises.json',
+      }).as('getExercises');
       cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/login`, {
         fixture: 'russian-llm-api/login-success.json',
+        statusCode: 200,
       }).as('loginRequest');
-      cy.get('input[name=email]').type('test@example.com');
-      cy.get('input[name=password]').type('password123');
+      cy.get('[data-cy=f-login]')
+        .find('input[name=email]')
+        .type('test@example.com');
+      cy.get('[data-cy=f-login]')
+        .find('input[name=password]')
+        .type('password123');
       cy.get('[data-cy=f-login]').submit();
       cy.wait('@loginRequest');
 

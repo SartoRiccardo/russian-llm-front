@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router';
 import {
   checkLoginStatus as apiCheckLoginStatus,
   login as apiLogin,
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userData, setUserData] = useState<IUserData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSlowNetwork, setIsSlowNetwork] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const isLoggedIn = !!userData && userData.sessionExpire > Date.now();
 
@@ -84,7 +86,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
   }, [handleLogin]);
 
-  const login = async (email: string, password: string) => {
+  const login = async (
+    email: string,
+    password: string,
+    redirect: string | null = null,
+  ) => {
     setIsLoading(true);
     try {
       const response = await apiLogin(email, password);
@@ -96,6 +102,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         username: response.username,
         sessionExpire: response.sessionExpire,
       });
+      if (redirect) {
+        navigate(redirect);
+      }
     } catch (error) {
       setUserData(null);
       throw error;
@@ -104,7 +113,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  const logout = async () => {
+  const logout = async (redirect?: string) => {
     setIsLoading(true);
     try {
       await apiLogout();
@@ -112,6 +121,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       localStorage.removeItem(SESSION_EXPIRE_KEY);
       setUserData(null);
       setIsLoading(false);
+      if (redirect) {
+        navigate(`/login?redirect=${redirect}`);
+      }
     }
   };
 

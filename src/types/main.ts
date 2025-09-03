@@ -21,8 +21,12 @@ export interface IAuthContext {
   isSlowNetwork: boolean;
   sessionExpire: number;
   sessionExpireMs: number;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  login: (
+    email: string,
+    password: string,
+    redirect?: string | null,
+  ) => Promise<void>;
+  logout: (redirect?: string) => Promise<void>;
 }
 
 /**

@@ -1,4 +1,5 @@
 import type { IAuthnSuccessResponse } from '@/types/main';
+import type { IExercisesApiResponse } from '@/types/exercises';
 import {
   ApiError,
   ValidationError,
@@ -138,6 +139,65 @@ if (process.env.NODE_ENV === 'development') {
     },
     { delay: 500 },
   );
+
+  fetchMock.route(
+    `${import.meta.env.VITE_API_BASE_URL}/exercises`,
+    {
+      body: {
+        types: [
+          {
+            id: 'alphabet',
+            name: 'Alphabet',
+            description: 'Learn the cyrillic alphabet.',
+          },
+          {
+            id: 'grammar',
+            name: 'Grammar',
+            description: 'Master Russian grammar.',
+          },
+        ],
+        exercises: [
+          {
+            id: '1',
+            name: 'Cyrillic Basics',
+            description: 'Vowels and basic consonants',
+            type: 'alphabet',
+            mastery: 4,
+            locked: false,
+            sort_order: 1,
+          },
+          {
+            id: '2',
+            name: 'Advanced Consonants',
+            description: 'Hard and soft consonants',
+            type: 'alphabet',
+            mastery: 2,
+            locked: false,
+            sort_order: 2,
+          },
+          {
+            id: '3',
+            name: 'Introduction to Cases',
+            description: 'Learn the 6 cases.',
+            type: 'grammar',
+            mastery: 0,
+            locked: false,
+            sort_order: 1,
+          },
+          {
+            id: '4',
+            name: 'Verbs of Motion',
+            description: 'Going, walking, running.',
+            type: 'grammar',
+            mastery: 0,
+            locked: true,
+            sort_order: 2,
+          },
+        ],
+      },
+    },
+    { delay: 500 },
+  );
 }
 
 export const checkLoginStatus = async (): Promise<IAuthnSuccessResponse> => {
@@ -236,4 +296,20 @@ export const resetPassword = async (values: {
   if (response.status >= 500) {
     throw new ServerError('Server Error');
   }
+};
+
+export const getExercises = async (
+  signal?: AbortSignal,
+): Promise<IExercisesApiResponse> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/exercises`,
+    { signal },
+  );
+  if (response.status === 401) {
+    throw new ApiError('Unauthorized');
+  }
+  if (response.status >= 500) {
+    throw new ServerError('Server error while fetching exercises');
+  }
+  return await response.json();
 };

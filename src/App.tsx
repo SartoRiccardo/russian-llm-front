@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
 import { AuthProvider } from '@/components/contexts/AuthProvider';
 import { useAuth } from '@/hooks/useAuth';
-import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
 import PasswordResetPage from '@/pages/PasswordResetPage';
 import ToastProvider from '@/components/contexts/ToastProvider';
+import ExercisesPage from '@/pages/ExercisesPage';
 
 /**
  * Defines the application's routes.
@@ -17,7 +17,7 @@ const AppRoutes = () => {
     <Routes>
       <Route
         path="/login"
-        element={isLoggedIn ? <Navigate to="/" /> : <LoginPage />}
+        element={isLoggedIn ? <Navigate to="/exercises" /> : <LoginPage />}
       />
       <Route
         path="/forgot-password"
@@ -31,10 +31,9 @@ const AppRoutes = () => {
           isLoggedIn ? <Navigate to="/settings" /> : <PasswordResetPage />
         }
       />
-      <Route path="/" element={<HomePage />} />
-      <Route path="/home" element={<HomePage />} />
+      <Route path="/exercises" element={<ExercisesPage />} />
       <Route path="/settings" element={<div>Not implemented</div>} />
-      <Route path="*" element={<Navigate to="/" />} />
+      <Route path="*" element={<Navigate to="/exercises" />} />
     </Routes>
   );
 };

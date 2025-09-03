@@ -1,5 +1,6 @@
 describe('Stats and Vocabulary Page', () => {
   beforeEach(() => {
+    cy.login();
     cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/stats`, {
       fixture: 'russian-llm-api/stats.json',
     }).as('getStats');

@@ -1,5 +1,7 @@
 describe('Vocabulary Page', () => {
   beforeEach(() => {
+    cy.login();
+
     // Mock dependencies for the page
     cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/stats`, {
       fixture: 'russian-llm-api/stats.json',

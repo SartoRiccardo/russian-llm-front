@@ -1,5 +1,6 @@
 describe('Exercises Page', () => {
   beforeEach(() => {
+    cy.login();
     cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/exercises`, {
       fixture: 'russian-llm-api/exercises.json',
     }).as('getExercises');

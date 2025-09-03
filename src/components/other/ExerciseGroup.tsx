@@ -14,7 +14,7 @@ interface IExerciseGroupProps {
  */
 const ExerciseGroup = ({ type, exercises }: IExerciseGroupProps) => {
   return (
-    <div className="mb-8">
+    <div className="mb-8" data-cy="exercise-container">
       <h2 className="text-2xl font-bold border-b pb-2 mb-4">{type.name}</h2>
       {type.description && (
         <p className="text-lg text-gray-700 mb-4">{type.description}</p>

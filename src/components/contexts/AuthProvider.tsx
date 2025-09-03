@@ -11,6 +11,7 @@ import type {
   IUserData,
 } from '@/types/main';
 import { AuthContext } from './contexts';
+import { flushSync } from 'react-dom';
 
 const SESSION_EXPIRE_KEY = 'sessionExpire';
 
@@ -119,10 +120,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       await apiLogout();
     } finally {
       localStorage.removeItem(SESSION_EXPIRE_KEY);
-      setUserData(null);
-      setIsLoading(false);
+
       if (redirect) {
-        navigate(`/login?redirect=${redirect}`);
+        flushSync(() => {
+          setUserData(null);
+          setIsLoading(false);
+        });
+        navigate(`/login?redirect=${encodeURIComponent(redirect)}`);
+      } else {
+        setUserData(null);
+        setIsLoading(false);
       }
     }
   };

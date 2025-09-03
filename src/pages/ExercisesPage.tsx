@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getExercises } from '@/services/russian-llm-api';
 import type { IExercisesApiResponse } from '@/types/exercises';
 import { useAuth } from '@/hooks/useAuth';
-import { ApiError, ServerError, UnauthorizedError } from '@/types/errors';
+import { ServerError, UnauthorizedError } from '@/types/errors';
 import ExerciseGroup from '@/components/other/ExerciseGroup';
 import withAuthLoading from '@/components/hoc/withAuthLoading';
 import ErrorMessage from '@/components/ui/ErrorMessage';

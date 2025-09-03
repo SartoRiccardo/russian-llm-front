@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getExercises } from '@/services/russian-llm-api';
 import type { IExercisesApiResponse } from '@/types/exercises';
 import { useAuth } from '@/hooks/useAuth';
-import { ApiError, ServerError } from '@/types/errors';
+import { ApiError, ServerError, UnauthorizedError } from '@/types/errors';
 import ExerciseGroup from '@/components/other/ExerciseGroup';
 import withAuthLoading from '@/components/hoc/withAuthLoading';
 import ErrorMessage from '@/components/ui/ErrorMessage';
@@ -30,8 +30,7 @@ const ExercisesPage = () => {
         setData(response);
         setError(null);
       } catch (err) {
-        if (err instanceof ApiError) {
-          // Unauthorized
+        if (err instanceof UnauthorizedError) {
           logout('/exercises');
         } else if (err instanceof ServerError) {
           setError('Something went wrong on the server');

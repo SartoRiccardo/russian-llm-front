@@ -1,10 +1,10 @@
 import type { IAuthnSuccessResponse } from '@/types/main';
 import type { IExercisesApiResponse } from '@/types/exercises';
 import {
-  ApiError,
   ValidationError,
   ServerError,
   InvalidTokenError,
+  UnauthorizedError,
 } from '@/types/errors';
 import fetchMock from 'fetch-mock';
 
@@ -143,6 +143,7 @@ if (process.env.NODE_ENV === 'development') {
   fetchMock.route(
     `${import.meta.env.VITE_API_BASE_URL}/exercises`,
     {
+      status: 401,
       body: {
         types: [
           {
@@ -206,7 +207,7 @@ export const checkLoginStatus = async (): Promise<IAuthnSuccessResponse> => {
   );
 
   if (response.status === 401) {
-    throw new ApiError('Unauthorized');
+    throw new UnauthorizedError();
   }
   if (response.status >= 500) {
     throw new ServerError('Server error while checking login status');
@@ -306,7 +307,7 @@ export const getExercises = async (
     { signal },
   );
   if (response.status === 401) {
-    throw new ApiError('Unauthorized');
+    throw new UnauthorizedError();
   }
   if (response.status >= 500) {
     throw new ServerError('Server error while fetching exercises');

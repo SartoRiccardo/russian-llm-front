@@ -1,4 +1,4 @@
-import type { IAuthnSuccessResponse } from '@/types/main';
+import type { IAuthnSuccessResponse, IStatsResponse } from '@/types/main';
 import type { IExercisesApiResponse } from '@/types/exercises';
 import {
   ValidationError,
@@ -143,7 +143,6 @@ if (process.env.NODE_ENV === 'development') {
   fetchMock.route(
     `${import.meta.env.VITE_API_BASE_URL}/exercises`,
     {
-      status: 401,
       body: {
         types: [
           {
@@ -193,6 +192,106 @@ if (process.env.NODE_ENV === 'development') {
             mastery: 0,
             locked: true,
             sort_order: 2,
+          },
+        ],
+      },
+    },
+    { delay: 500 },
+  );
+
+  fetchMock.route(
+    `${import.meta.env.VITE_API_BASE_URL}/stats`,
+    {
+      status: 200,
+      body: {
+        language_skills: [
+          { id: 'reading', mastery: 'B1' },
+          { id: 'speaking', mastery: 'A2' },
+          { id: 'listening', mastery: 'B2' },
+          { id: 'writing', mastery: 'A1' },
+        ],
+        word_skills: [
+          {
+            id: 'verbs',
+            mastery: 3,
+            subcategories: [
+              {
+                id: 'present-tense',
+                mastery: 4,
+                rules: [
+                  {
+                    id: 1,
+                    rule: 'For -ать verbs, drop -ть and add endings: -ю, -ешь, -ет, -ем, -ете, -ют.',
+                  },
+                  {
+                    id: 2,
+                    rule: 'For -ить verbs, drop -ить and add endings: -ю, -ишь, -ит, -им, -ите, -ят.',
+                  },
+                ],
+              },
+              {
+                id: 'past-tense',
+                mastery: 3,
+                rules: [
+                  {
+                    id: 3,
+                    rule: 'To form the past tense, replace the infinitive ending with -л (masculine), -ла (feminine), -ло (neuter), or -ли (plural).',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'nouns',
+            mastery: 2,
+            subcategories: [
+              {
+                id: 'nominative',
+                mastery: 4,
+                rules: [
+                  {
+                    id: 4,
+                    rule: 'The nominative case is the dictionary form of the noun, used for the subject of a sentence.',
+                  },
+                ],
+              },
+              {
+                id: 'genitive',
+                mastery: 2,
+                rules: [
+                  {
+                    id: 5,
+                    rule: "The genitive case is used to show possession, quantity, or absence. Replaces 'of' in English.",
+                  },
+                ],
+              },
+              {
+                id: 'accusative',
+                mastery: 1,
+                rules: [
+                  {
+                    id: 6,
+                    rule: 'The accusative case is used for the direct object of a transitive verb.',
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            id: 'adjectives',
+            mastery: 1,
+            subcategories: [
+              {
+                id: 'gender-agreement',
+                mastery: 1,
+                rules: [
+                  {
+                    id: 7,
+                    rule: 'Adjectives must agree in gender, number, and case with the noun they modify.',
+                  },
+                ],
+              },
+            ],
           },
         ],
       },
@@ -311,6 +410,21 @@ export const getExercises = async (
   }
   if (response.status >= 500) {
     throw new ServerError('Server error while fetching exercises');
+  }
+  return await response.json();
+};
+
+export const getStats = async (
+  signal?: AbortSignal,
+): Promise<IStatsResponse> => {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/stats`, {
+    signal,
+  });
+  if (response.status === 401) {
+    throw new UnauthorizedError();
+  }
+  if (response.status >= 500) {
+    throw new ServerError('Server error while fetching stats');
   }
   return await response.json();
 };

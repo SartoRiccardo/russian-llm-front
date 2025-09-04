@@ -1,0 +1,71 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router';
+import { useStats } from '@/hooks/useStats';
+import { useAuth } from '@/hooks/useAuth';
+import ErrorMessage from '@/components/ui/ErrorMessage';
+import { UnauthorizedError } from '@/types/errors';
+import type { ISkillSchema } from '@/types/main';
+
+/**
+ * Stats page component.
+ * Displays the user's language skills.
+ */
+export default function StatsPage() {
+  const { languageSkills, isLoadingStats, loadStats } = useStats();
+  const { logout } = useAuth();
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const doLoadStats = async () => {
+      try {
+        await loadStats();
+      } catch (err) {
+        setError(err as Error);
+      }
+    };
+    doLoadStats();
+  }, [loadStats]);
+
+  if (isLoadingStats) {
+    return <div>Loading...</div>;
+  }
+
+  // Handle the error directly inside the catch
+  if (error) {
+    if (error instanceof UnauthorizedError) {
+      logout('/stats');
+      return null;
+    }
+    return <ErrorMessage message="Something went wrong on the server" />;
+  }
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Your Stats</h1>
+      <div
+        data-cy="skill-list"
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+      >
+        {languageSkills.map((skill: ISkillSchema) => (
+          <div
+            key={skill.id}
+            data-cy="skill-item"
+            className="p-4 border rounded-lg"
+          >
+            <h2 className="text-xl font-semibold">{skill.id}</h2>
+            <p className="text-lg">{skill.mastery}</p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-8">
+        <Link
+          to="/vocabulary"
+          data-cy="words-link"
+          className="text-blue-500 hover:underline"
+        >
+          View Vocabulary
+        </Link>
+      </div>
+    </div>
+  );
+}

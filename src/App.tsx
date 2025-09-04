@@ -7,6 +7,9 @@ import PasswordResetPage from '@/pages/PasswordResetPage';
 import ToastProvider from '@/components/contexts/ToastProvider';
 import ExercisesPage from '@/pages/ExercisesPage';
 import ExerciseDetailPage from '@/pages/ExerciseDetailPage';
+import StatsContextRoute from '@/components/contexts/route-groups/StatsContextRoute';
+import StatsPage from '@/pages/StatsPage';
+import VocabularyPage from '@/pages/VocabularyPage';
 
 /**
  * Defines the application's routes.
@@ -39,6 +42,10 @@ const AppRoutes = () => {
       />
       <Route path="/exercises" element={<ExercisesPage />} />
       <Route path="/exercises/:id" element={<ExerciseDetailPage />} />
+      <Route path="/" element={<StatsContextRoute />}>
+        <Route path="stats" element={<StatsPage />} />
+        <Route path="vocabulary" element={<VocabularyPage />} />
+      </Route>
       <Route path="/settings" element={<div>Not implemented</div>} />
       <Route path="*" element={<Navigate to="/exercises" />} />
     </Routes>

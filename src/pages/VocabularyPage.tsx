@@ -71,7 +71,7 @@ export default function VocabularyPage() {
   }, [words]);
 
   const handleLoadMore = async () => {
-    if (pages !== null && currentPage >= pages) return;
+    if (isLoadingWords || (pages !== null && currentPage >= pages)) return;
 
     const doFetchWords = async (page: number) => {
       try {
@@ -120,21 +120,19 @@ export default function VocabularyPage() {
 
       {/* Display Words */}
       <h2 className="text-2xl font-bold mb-4">Words</h2>
-      {isLoadingWords && !words.length ? (
-        <div>Loading words...</div>
-      ) : (
-        <>
-          {Object.entries(groupedWords).map(([category, words]) => (
-            <WordCategory key={category} category={category} words={words} />
-          ))}
-          {(pages === null || currentPage < pages) && (
-            <Loader key={currentPage} onVisible={handleLoadMore}>
-              Loading...
-            </Loader>
-          )}
-        </>
+      {Object.entries(groupedWords).map(([category, words]) => (
+        <WordCategory key={category} category={category} words={words} />
+      ))}
+      {(pages === null || currentPage < pages) && (
+        <Loader key={currentPage} onVisible={handleLoadMore}>
+          Loading...
+        </Loader>
       )}
-      {wordsError && <div className="text-red-500">Error loading words</div>}
+      {wordsError && (
+        <div data-cy="words-error-message" className="text-red-500">
+          Error loading words
+        </div>
+      )}
     </div>
   );
 }

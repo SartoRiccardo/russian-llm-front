@@ -118,25 +118,14 @@ describe('Vocabulary Page', () => {
       cy.get('[data-cy=variant-rules-button]').should('not.exist');
     });
 
-    it('retries with exponential backoff on server errors', () => {
+    it('displays an error message on server errors', () => {
       cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/words?page=1`, {
         statusCode: 503,
       }).as('getWordsError');
-      cy.clock();
       cy.visit('/vocabulary');
 
       cy.wait('@getWordsError');
-      cy.tick(1000);
-      cy.wait('@getWordsError');
-      cy.tick(2000);
-      cy.wait('@getWordsError');
-
-      cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/words?page=1`, {
-        fixture: 'russian-llm-api/words-page-1.json',
-      }).as('getWordsSuccess');
-      cy.tick(4000);
-      cy.wait('@getWordsSuccess');
-      cy.get('[data-cy=word-category]').should('be.visible');
+      cy.get('[data-cy=words-error-message]').should('be.visible');
     });
 
     it('redirects to login on unauthorized error', () => {

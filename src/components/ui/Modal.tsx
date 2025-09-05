@@ -33,7 +33,7 @@ export default function Modal({
     } else if (!show && mounted) {
       setAnimating(true);
     }
-  }, [show, mounted, animating]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [show, mounted, animating, onShow]);
 
   return !mounted ? null : (
     <div
@@ -44,7 +44,6 @@ export default function Modal({
       onClick={onHide}
       onAnimationEnd={() => {
         setAnimating(false);
-        console.log(show, mounted);
         if (show) {
           if (onShown) onShown();
         } else {

@@ -1,5 +1,6 @@
 import type { IAuthnSuccessResponse, IStatsResponse } from '@/types/main';
 import type { IExercisesApiResponse } from '@/types/exercises';
+import type { IWordsResponse } from '@/types/words';
 import {
   ValidationError,
   ServerError,
@@ -195,6 +196,259 @@ if (process.env.NODE_ENV === 'development') {
           },
         ],
       },
+    },
+    { delay: 500 },
+  );
+
+  fetchMock.route(
+    new RegExp(`${import.meta.env.VITE_API_BASE_URL}/words`),
+    (url: IFetchMockParams) => {
+      const urlObj = new URL(url.args[0]);
+      const page = urlObj.searchParams.get('page') || '1';
+      const pageNum = parseInt(page, 10);
+      if (pageNum > 4) {
+        return {
+          status: 200,
+          body: {
+            words: [],
+            pages: 4,
+          },
+        };
+      }
+
+      const pages = [
+        [
+          {
+            word_ru: 'кофе',
+            word_en: 'coffee',
+            category: 'food',
+            locked: false,
+            type: 'nouns',
+            variants: [
+              {
+                name: 'Nominative',
+                group: 'Cases',
+                word_ru: 'кофе',
+                word_ru_prefix: '',
+                sort_order: 1,
+                win_percent: 0.9,
+                subcategory: 'nominative',
+                rules: [4],
+              },
+              {
+                name: 'Genitive',
+                group: 'Cases',
+                word_ru: 'кофе',
+                word_ru_prefix: '',
+                sort_order: 2,
+                win_percent: 0.8,
+                subcategory: 'genitive',
+                rules: [5],
+              },
+              {
+                name: 'Dative',
+                group: 'Cases',
+                word_ru: 'кофе',
+                word_ru_prefix: '',
+                sort_order: 3,
+                win_percent: 0.7,
+                subcategory: 'dative',
+                rules: [],
+              },
+              {
+                name: 'Accusative',
+                group: 'Cases',
+                word_ru: 'кофе',
+                word_ru_prefix: '',
+                sort_order: 4,
+                win_percent: 0.85,
+                subcategory: 'accusative',
+                rules: [6],
+              },
+              {
+                name: 'Instrumental',
+                group: 'Cases',
+                word_ru: 'кофе',
+                word_ru_prefix: '',
+                sort_order: 5,
+                win_percent: 0.6,
+                subcategory: 'instrumental',
+                rules: [],
+              },
+              {
+                name: 'Prepositional',
+                group: 'Cases',
+                word_ru: 'кофе',
+                word_ru_prefix: 'о',
+                sort_order: 6,
+                win_percent: 0.65,
+                subcategory: 'prepositional',
+                rules: [],
+              },
+            ],
+          },
+          {
+            word_ru: 'чай',
+            word_en: 'tea',
+            category: 'food',
+            locked: false,
+            type: 'nouns',
+            variants: [
+              {
+                name: 'Nominative',
+                group: 'Cases',
+                word_ru: 'чай',
+                word_ru_prefix: '',
+                sort_order: 1,
+                win_percent: 0.95,
+                subcategory: 'nominative',
+                rules: [4],
+              },
+              {
+                name: 'Genitive',
+                group: 'Cases',
+                word_ru: 'чая',
+                word_ru_prefix: '',
+                sort_order: 2,
+                win_percent: 0.9,
+                subcategory: 'genitive',
+                rules: [5],
+              },
+              {
+                name: 'Accusative',
+                group: 'Cases',
+                word_ru: 'чай',
+                word_ru_prefix: '',
+                sort_order: 4,
+                win_percent: 0.92,
+                subcategory: 'accusative',
+                rules: [6],
+              },
+            ],
+          },
+        ],
+
+        [
+          {
+            word_ru: 'машина',
+            word_en: 'car',
+            category: 'transport',
+            locked: false,
+            type: 'nouns',
+            variants: [
+              {
+                name: 'Nominative',
+                group: 'Cases',
+                word_ru: 'машина',
+                word_ru_prefix: '',
+                sort_order: 1,
+                win_percent: 0.8,
+                subcategory: 'nominative',
+                rules: [4],
+              },
+              {
+                name: 'Genitive',
+                group: 'Cases',
+                word_ru: 'машины',
+                word_ru_prefix: '',
+                sort_order: 2,
+                win_percent: 0.7,
+                subcategory: 'genitive',
+                rules: [5],
+              },
+              {
+                name: 'Accusative',
+                group: 'Cases',
+                word_ru: 'машину',
+                word_ru_prefix: '',
+                sort_order: 4,
+                win_percent: 0.75,
+                subcategory: 'accusative',
+                rules: [6],
+              },
+            ],
+          },
+          {
+            word_ru: 'самолет',
+            word_en: 'airplane',
+            category: 'transport',
+            locked: true,
+            type: 'nouns',
+            variants: [
+              {
+                name: 'Nominative',
+                group: 'Cases',
+                word_ru: 'самолет',
+                word_ru_prefix: '',
+                sort_order: 1,
+                win_percent: 0.6,
+                subcategory: 'nominative',
+                rules: [4],
+              },
+              {
+                name: 'Genitive',
+                group: 'Cases',
+                word_ru: 'самолета',
+                word_ru_prefix: '',
+                sort_order: 2,
+                win_percent: 0.5,
+                subcategory: 'genitive',
+                rules: [5],
+              },
+            ],
+          },
+        ],
+
+        [
+          {
+            word_ru: 'говорить',
+            word_en: 'to speak',
+            category: 'tourism',
+            locked: false,
+            type: 'verbs',
+            variants: [
+              {
+                name: 'Я (I)',
+                group: 'Present Tense',
+                word_ru: 'говорю',
+                word_ru_prefix: 'я',
+                sort_order: 1,
+                win_percent: 0.9,
+                subcategory: 'present-tense',
+                rules: [2],
+              },
+              {
+                name: 'Ты (You)',
+                group: 'Present Tense',
+                word_ru: 'говоришь',
+                word_ru_prefix: 'ты',
+                sort_order: 2,
+                win_percent: 0.85,
+                subcategory: 'present-tense',
+                rules: [2],
+              },
+              {
+                name: 'Он/Она/Оно (He/She/It)',
+                group: 'Present Tense',
+                word_ru: 'говорит',
+                word_ru_prefix: 'он',
+                sort_order: 3,
+                win_percent: 0.8,
+                subcategory: 'present-tense',
+                rules: [2],
+              },
+            ],
+          },
+        ],
+      ];
+
+      return {
+        status: 200,
+        body: {
+          words: pages[pageNum - 1],
+          pages: 3,
+        },
+      };
     },
     { delay: 500 },
   );
@@ -425,6 +679,23 @@ export const getStats = async (
   }
   if (response.status >= 500) {
     throw new ServerError('Server error while fetching stats');
+  }
+  return await response.json();
+};
+
+export const getWords = async (
+  page: number,
+  signal?: AbortSignal,
+): Promise<IWordsResponse> => {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/words?page=${page}`,
+    { signal },
+  );
+  if (response.status === 401) {
+    throw new UnauthorizedError();
+  }
+  if (response.status >= 500) {
+    throw new ServerError('Server error while fetching words');
   }
   return await response.json();
 };

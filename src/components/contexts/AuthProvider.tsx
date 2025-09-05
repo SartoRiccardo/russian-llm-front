@@ -34,23 +34,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsLoading(true);
       const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
       if (sessionExpireInt > Date.now()) {
+        const fetchId = Math.random();
+        latestFetchId.current = fetchId;
+
         try {
           const response =
             (await apiCheckLoginStatus()) as IAuthnSuccessResponse;
-          setUserData({
-            username: response.username,
-            sessionExpire: response.sessionExpire,
-          });
-        } catch (error) {
-          // Unauthorized or other error
-          // Only delete sessionExpire if it's a 4xx error, not network error
-          if (
-            error instanceof Error &&
-            !error.message.includes('NetworkError')
-          ) {
-            localStorage.removeItem(SESSION_EXPIRE_KEY);
+          if (latestFetchId.current === fetchId) {
+            setUserData({
+              username: response.username,
+              sessionExpire: response.sessionExpire,
+            });
           }
-          setUserData(null);
+        } catch (error) {
+          if (latestFetchId.current === fetchId) {
+            // Unauthorized or other error
+            // Only delete sessionExpire if it's a 4xx error, not network error
+            if (
+              error instanceof Error &&
+              !error.message.includes('NetworkError')
+            ) {
+              localStorage.removeItem(SESSION_EXPIRE_KEY);
+            }
+            setUserData(null);
+          }
         }
       } else {
         localStorage.removeItem(SESSION_EXPIRE_KEY);

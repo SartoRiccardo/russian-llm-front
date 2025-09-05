@@ -46,7 +46,7 @@ Make components for word types, word subcategories, and the modal that shows up.
 Note that this GET request should also go off if visiting `/vocabulary` directly, as it depends on that data.
 
 **Error handling:** On the stats page, handle errors the same way they're handled in @tasks/25083101_exercises_page.md
-On the vocabulary page, if the request returns a `5xx`, do an exponential backoff instead and show an error toast instead.
+On the vocabulary page, if the request returns a `5xx`, still render the page as normal but render an error component instead of the stats. In this page, in a future task, there will be another section independant of this request, so if that request succeeds where this fails, the page should still be partially rendered. As such, do not implement this with an early "if error => return errorPage" statement or similar.
 
 ## Stats and Vocabulary context
 
@@ -95,7 +95,7 @@ The modal for the rules should use this generic component. The modal for the rul
 4. **Server Error**
    - Check that if there is a server error (error code is `5xx`) the error page shows up, which you should be able to check with the `data-cy=page-error` selector.
 5. **Server Error on Vocabulary page**
-   - Check that if there is a server error (error code is `5xx`) the error toast shows up and the request is retried after a few seconds.
+   - Check that if there is a server error (error code is `5xx`) the error component shows up. Select this component with `data-cy=vocabulary-stats-error`
 6. **Network Error**
    - Simulate a network error for 3 seconds and make sure the browser requests the endpoint twice. After the second time, stop simulating the network error and test that the page renders as expected. Use the same fixture you used for the test specified in point 1.
 7. **Modal Test**
@@ -111,7 +111,7 @@ The modal for the rules should use this generic component. The modal for the rul
 
 - The container for the language skills list on the `/stats` page should have `data-cy="skill-list"`.
 - Each item in the language skills list should have `data-cy="skill-item"`.
-- The server error toast on the `/vocabulary` page should have `data-cy="t-vocab-server-error"`.
+- The server error component on the `/vocabulary` page should have `data-cy="vocabulary-stats-error"`.
 - The container for rules shown in a modal should have `data-cy="grammar-rules"`.
 - Each individual rule in that container should have `data-cy="rule-item"`.
 - Each individual subcategory item should have `data-cy="subcategory-${id}"`.

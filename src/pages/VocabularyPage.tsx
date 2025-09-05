@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useStats } from '@/hooks/useStats';
 import WordSkill from '@/components/other/WordSkill';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import { UnauthorizedError, ServerError } from '@/types/errors';
 import type { IWordSkillSchema } from '@/types/main';
-import { useToast } from '@/hooks/useToast';
 import { useAuth } from '@/hooks/useAuth';
 
 /**
@@ -13,14 +12,16 @@ import { useAuth } from '@/hooks/useAuth';
  */
 export default function VocabularyPage() {
   const { wordSkills, isLoadingStats, loadStats } = useStats();
-  const { createToast } = useToast();
   const { logout } = useAuth();
-  const [error, setError] = useState<Error | null>(null);
+  const [statsError, setStatsError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let retryTimout: ReturnType<typeof setTimeout> | null = null;
+
     const doLoadStats = async () => {
       try {
         await loadStats();
+        setStatsError(null);
       } catch (err) {
         const error = err as Error;
         if (error instanceof UnauthorizedError) {
@@ -28,31 +29,30 @@ export default function VocabularyPage() {
           return;
         }
         if (error instanceof ServerError) {
-          createToast({
-            id: 'vocab-server-error',
-            title: 'Server Error',
-            content: 'Error fetching data, retrying...',
-            type: 'ERROR',
-            dataCy: 't-vocab-server-error',
-          });
+          setStatsError(error);
         } else {
-          setError(error);
+          // Network error
+          retryTimout = setTimeout(doLoadStats, 2000);
         }
       }
     };
 
     doLoadStats();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (error) {
-    return <ErrorMessage message="Something went wrong" />;
-  }
+    return () => {
+      if (retryTimout) clearTimeout(retryTimout);
+    };
+  }, []);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Vocabulary</h1>
-      {isLoadingStats && !wordSkills.length ? (
+      {isLoadingStats && !wordSkills.length && !statsError ? (
         <div>Loading...</div>
+      ) : statsError ? (
+        <div data-cy="vocabulary-stats-error">
+          <ErrorMessage message="Error fetching vocabulary stats." />
+        </div>
       ) : (
         <div>
           {wordSkills.map((skill: IWordSkillSchema) => (

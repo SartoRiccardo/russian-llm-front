@@ -91,21 +91,14 @@ describe('Stats and Vocabulary Page', () => {
       cy.get('[data-cy=skill-list]').should('be.visible');
     });
 
-    it('shows a toast and retries on server errors (Vocabulary Page)', () => {
+    it('shows an error component on server errors (Vocabulary Page)', () => {
       cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/stats`, {
-        statusCode: 503,
+        statusCode: 500,
       }).as('getStatsError');
-      cy.clock();
       cy.visit('/vocabulary');
+      cy.wait('@getStatsError');
 
-      cy.wait('@getStatsError');
-      cy.get('[data-cy=t-vocab-server-error]').should('be.visible');
-
-      // Check for retry with exponential backoff
-      cy.tick(1000);
-      cy.wait('@getStatsError');
-      cy.tick(2000);
-      cy.wait('@getStatsError');
+      cy.get('[data-cy=vocabulary-stats-error]').should('be.visible');
     });
 
     it('redirects to login on unauthorized error and returns after login', () => {

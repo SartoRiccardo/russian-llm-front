@@ -32,7 +32,11 @@ export default function GrammarRules({
         {sortedRules.map((rule) => (
           <li
             key={rule.id}
-            data-cy="rule-item"
+            data-cy={
+              highlightedRuleIds.includes(rule.id)
+                ? 'highlighted-rule'
+                : 'rule-item'
+            }
             className={`p-2 my-1 border rounded ${
               highlightedRuleIds.includes(rule.id) ? 'bg-yellow-200' : ''
             }`}

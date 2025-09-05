@@ -42,7 +42,7 @@ export default function VocabularyPage() {
     return () => {
       if (retryTimout) clearTimeout(retryTimout);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="container mx-auto p-4">

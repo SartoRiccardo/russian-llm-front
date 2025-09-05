@@ -39,7 +39,7 @@ export default function WordVariant({
           <span className="font-semibold">{variant.word_ru}</span> (
           {variant.name})
         </div>
-        {hasRules && wordSkills && (
+        {hasRules && wordSkills.length && (
           <button
             data-cy="variant-rules-button"
             onClick={() => onShowRules(getRulesForVariant(), variant.rules)}

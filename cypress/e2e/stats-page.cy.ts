@@ -112,10 +112,18 @@ describe('Stats and Vocabulary Page', () => {
       cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/stats`, {
         statusCode: 401,
       }).as('getStatsUnauthorized');
+      cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/logout`, {
+        statusCode: 200,
+      }).as('getLogout');
+
       cy.visit('/stats');
       cy.wait('@getStatsUnauthorized');
+      cy.wait('@getLogout');
 
-      cy.url().should('include', '/login?redirect=%2Fstats');
+      cy.url().should(
+        'include',
+        `/login?redirect=${encodeURIComponent('/stats')}`,
+      );
 
       cy.intercept('POST', `${Cypress.env('VITE_API_BASE_URL')}/login`, {
         fixture: 'russian-llm-api/login-success.json',
@@ -124,8 +132,8 @@ describe('Stats and Vocabulary Page', () => {
         fixture: 'russian-llm-api/stats.json',
       }).as('getStats');
 
-      cy.get('input[name=email]').type('test@example.com');
-      cy.get('input[name=password]').type('password123');
+      cy.get('[data-cy=f-login] input[name=email]').type('test@example.com');
+      cy.get('[data-cy=f-login] input[name=password]').type('password123');
       cy.get('[data-cy=f-login]').submit();
 
       cy.wait('@loginRequest');

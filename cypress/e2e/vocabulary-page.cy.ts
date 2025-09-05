@@ -143,8 +143,12 @@ describe('Vocabulary Page', () => {
       cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/words?page=1`, {
         statusCode: 401,
       }).as('getWordsUnauthorized');
+      cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/logout`, {
+        statusCode: 200,
+      }).as('getLogout');
       cy.visit('/vocabulary');
       cy.wait('@getWordsUnauthorized');
+      cy.wait('@getLogout');
       cy.url().should('include', '/login?redirect=%2Fvocabulary');
     });
   });

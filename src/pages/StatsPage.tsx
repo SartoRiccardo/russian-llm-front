@@ -20,22 +20,23 @@ export default function StatsPage() {
       try {
         await loadStats();
       } catch (err) {
-        setError(err as Error);
+        const error = err as Error;
+        if (error instanceof UnauthorizedError) {
+          logout('/stats');
+          return;
+        }
+        setError(error);
       }
     };
+
     doLoadStats();
-  }, [loadStats]);
+  }, []);
 
   if (isLoadingStats) {
     return <div>Loading...</div>;
   }
 
-  // Handle the error directly inside the catch
   if (error) {
-    if (error instanceof UnauthorizedError) {
-      logout('/stats');
-      return null;
-    }
     return <ErrorMessage message="Something went wrong on the server" />;
   }
 

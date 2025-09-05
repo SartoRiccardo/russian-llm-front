@@ -99,12 +99,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         SESSION_EXPIRE_KEY,
         response.sessionExpire.toString(),
       );
-      setUserData({
-        username: response.username,
-        sessionExpire: response.sessionExpire,
-      });
       if (redirect) {
+        flushSync(() =>
+          setUserData({
+            username: response.username,
+            sessionExpire: response.sessionExpire,
+          }),
+        );
         navigate(redirect);
+      } else {
+        setUserData({
+          username: response.username,
+          sessionExpire: response.sessionExpire,
+        });
       }
     } catch (error) {
       setUserData(null);

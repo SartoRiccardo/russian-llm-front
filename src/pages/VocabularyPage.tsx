@@ -22,29 +22,30 @@ export default function VocabularyPage() {
       try {
         await loadStats();
       } catch (err) {
-        setError(err as Error);
+        const error = err as Error;
+        if (error instanceof UnauthorizedError) {
+          logout('/vocabulary');
+          return;
+        }
+        if (error instanceof ServerError) {
+          createToast({
+            id: 'vocab-server-error',
+            title: 'Server Error',
+            content: 'Error fetching data, retrying...',
+            type: 'ERROR',
+            dataCy: 't-vocab-server-error',
+          });
+        } else {
+          setError(error);
+        }
       }
     };
-    doLoadStats();
-  }, [loadStats]);
 
-  // Handle the error directly inside the catch
+    doLoadStats();
+  }, []);
+
   if (error) {
-    if (error instanceof UnauthorizedError) {
-      logout('/vocabulary');
-      return null;
-    }
-    if (error instanceof ServerError) {
-      createToast({
-        id: 'vocab-server-error',
-        title: 'Server Error',
-        content: 'Error fetching data, retrying...',
-        type: 'ERROR',
-        dataCy: 't-vocab-server-error',
-      });
-    } else {
-      return <ErrorMessage message="Something went wrong" />;
-    }
+    return <ErrorMessage message="Something went wrong" />;
   }
 
   return (

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router';
 import { useStats } from '@/hooks/useStats';
 import { useAuth } from '@/hooks/useAuth';
 import ErrorMessage from '@/components/ui/ErrorMessage';
-import { UnauthorizedError } from '@/types/errors';
+import { UnauthorizedError, ServerError } from '@/types/errors';
 import type { ISkillSchema } from '@/types/main';
 
 /**
@@ -16,28 +16,40 @@ export default function StatsPage() {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let retryTimout: ReturnType<typeof setTimeout> | null = null;
+
     const doLoadStats = async () => {
       try {
         await loadStats();
+        setError(null);
       } catch (err) {
         const error = err as Error;
         if (error instanceof UnauthorizedError) {
           logout('/stats');
           return;
         }
-        setError(error);
+        if (error instanceof ServerError) {
+          setError(error);
+          return;
+        }
+        // Network error, retry
+        retryTimout = setTimeout(doLoadStats, 2000);
       }
     };
 
     doLoadStats();
-  }, []);
 
-  if (isLoadingStats) {
-    return <div>Loading...</div>;
-  }
+    return () => {
+      if (retryTimout) clearTimeout(retryTimout);
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (error) {
     return <ErrorMessage message="Something went wrong on the server" />;
+  }
+
+  if (isLoadingStats && !languageSkills.length) {
+    return <div>Loading...</div>;
   }
 
   return (

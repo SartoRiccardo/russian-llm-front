@@ -42,7 +42,7 @@ export default function VocabularyPage() {
     };
 
     doLoadStats();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (error) {
     return <ErrorMessage message="Something went wrong" />;

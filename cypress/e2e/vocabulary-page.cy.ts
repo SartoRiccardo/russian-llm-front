@@ -23,15 +23,15 @@ describe('Vocabulary Page', () => {
       cy.wait('@getStats');
       cy.wait('@getWordsPage1');
 
-      cy.get('[data-cy=word-category]').should('have.length', 1);
+      cy.get('[data-cy=word-category]').should('have.length', 9);
 
       cy.get('[data-cy=loader]').scrollIntoView();
       cy.wait('@getWordsPage2');
-      cy.get('[data-cy=word-category]').should('have.length', 2);
+      cy.get('[data-cy=word-category]').should('have.length', 9 + 5);
 
       cy.get('[data-cy=loader]').scrollIntoView();
       cy.wait('@getWordsPage3');
-      cy.get('[data-cy=word-category]').should('have.length', 3);
+      cy.get('[data-cy=word-category]').should('have.length', 9 + 5 + 1);
 
       cy.get('[data-cy=loader]').should('not.exist');
     });

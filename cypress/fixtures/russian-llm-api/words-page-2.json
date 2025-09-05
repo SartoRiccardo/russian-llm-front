@@ -67,6 +67,158 @@
           "rules": [5]
         }
       ]
+    },
+    {
+      "word_ru": "книга",
+      "word_en": "book",
+      "category": "objects",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "книга",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.9,
+          "subcategory": "nominative",
+          "rules": [4]
+        }
+      ]
+    },
+    {
+      "word_ru": "стол",
+      "word_en": "table",
+      "category": "furniture",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "стол",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.85,
+          "subcategory": "nominative",
+          "rules": [4]
+        }
+      ]
+    },
+    {
+      "word_ru": "стул",
+      "word_en": "chair",
+      "category": "furniture",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "стул",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.8,
+          "subcategory": "nominative",
+          "rules": [4]
+        }
+      ]
+    },
+    {
+      "word_ru": "компьютер",
+      "word_en": "computer",
+      "category": "electronics",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "компьютер",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.92,
+          "subcategory": "nominative",
+          "rules": [4]
+        }
+      ]
+    },
+    {
+      "word_ru": "телефон",
+      "word_en": "telephone",
+      "category": "electronics",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "телефон",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.88,
+          "subcategory": "nominative",
+          "rules": [4]
+        }
+      ]
+    },
+    {
+      "word_ru": "город",
+      "word_en": "city",
+      "category": "places",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "город",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.78,
+          "subcategory": "nominative",
+          "rules": [4]
+        }
+      ]
+    },
+    {
+      "word_ru": "страна",
+      "word_en": "country",
+      "category": "places",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "страна",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.83,
+          "subcategory": "nominative",
+          "rules": [4]
+        }
+      ]
+    },
+    {
+      "word_ru": "улица",
+      "word_en": "street",
+      "category": "places",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "улица",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.79,
+          "subcategory": "nominative",
+          "rules": [4]
+        }
+      ]
     }
   ],
   "pages": 3

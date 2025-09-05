@@ -107,6 +107,158 @@
           "rules": [6]
         }
       ]
+    },
+    {
+      "word_ru": "привет",
+      "word_en": "hello",
+      "category": "greetings",
+      "locked": false,
+      "type": "interjections",
+      "variants": [
+        {
+          "name": "Formal",
+          "group": "Forms",
+          "word_ru": "здравствуйте",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.8,
+          "subcategory": "formal",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "спасибо",
+      "word_en": "thank you",
+      "category": "gratitude",
+      "locked": false,
+      "type": "interjections",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "спасибо",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.9,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "до свидания",
+      "word_en": "goodbye",
+      "category": "farewells",
+      "locked": false,
+      "type": "interjections",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "до свидания",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.75,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "да",
+      "word_en": "yes",
+      "category": "affirmation",
+      "locked": false,
+      "type": "particles",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "да",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.98,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "нет",
+      "word_en": "no",
+      "category": "negation",
+      "locked": false,
+      "type": "particles",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "нет",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.96,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "пожалуйста",
+      "word_en": "please",
+      "category": "politeness",
+      "locked": false,
+      "type": "adverbs",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "пожалуйста",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.88,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "извините",
+      "word_en": "excuse me",
+      "category": "apologies",
+      "locked": false,
+      "type": "verbs",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "извините",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.7,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "как дела",
+      "word_en": "how are you",
+      "category": "questions",
+      "locked": false,
+      "type": "phrases",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "как дела",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.82,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
     }
   ],
   "pages": 3

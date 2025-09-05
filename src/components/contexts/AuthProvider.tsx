@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import {
   checkLoginStatus as apiCheckLoginStatus,
@@ -24,6 +24,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSlowNetwork, setIsSlowNetwork] = useState<boolean>(false);
   const navigate = useNavigate();
+  const latestFetchId = useRef(-1);
 
   const isLoggedIn = !!userData && userData.sessionExpire > Date.now();
 
@@ -92,9 +93,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     password: string,
     redirect: string | null = null,
   ) => {
+    const fetchId = Math.random();
+    latestFetchId.current = fetchId;
+
     setIsLoading(true);
     try {
       const response = await apiLogin(email, password);
+      if (latestFetchId.current !== fetchId) return;
+
       localStorage.setItem(
         SESSION_EXPIRE_KEY,
         response.sessionExpire.toString(),
@@ -114,18 +120,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         });
       }
     } catch (error) {
+      if (latestFetchId.current !== fetchId) return;
+
       setUserData(null);
       throw error;
     } finally {
+      if (latestFetchId.current !== fetchId) return;
+
       setIsLoading(false);
     }
   };
 
   const logout = async (redirect?: string) => {
+    const fetchId = Math.random();
+    latestFetchId.current = fetchId;
+
     setIsLoading(true);
     try {
       await apiLogout();
     } finally {
+      if (latestFetchId.current !== fetchId) return;
+
       localStorage.removeItem(SESSION_EXPIRE_KEY);
 
       if (redirect) {

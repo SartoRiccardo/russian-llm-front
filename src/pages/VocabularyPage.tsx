@@ -3,12 +3,12 @@ import useWords from '@/hooks/useWords';
 import { useStats } from '@/hooks/useStats';
 import { useAuth } from '@/hooks/useAuth';
 import { UnauthorizedError, ServerError } from '@/types/errors';
-import WordCategory from '@/components/other/WordCategory';
+import WordCategory from '@/components/vocabulary/WordCategory';
 import Loader from '@/components/ui/Loader';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import type { IWord } from '@/types/words';
 import type { IWordSkillSchema } from '@/types/main';
-import WordSkill from '@/components/other/WordSkill';
+import WordSkill from '@/components/vocabulary/WordSkill';
 
 /**
  * Vocabulary page component.
@@ -58,13 +58,16 @@ export default function VocabularyPage() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const groupedWords = useMemo(() => {
-    return words.reduce((acc, word) => {
-      if (!acc[word.category]) {
-        acc[word.category] = [];
-      }
-      acc[word.category].push(word);
-      return acc;
-    }, {} as Record<string, IWord[]>) as Record<string, IWord[]>;
+    return words.reduce(
+      (acc, word) => {
+        if (!acc[word.category]) {
+          acc[word.category] = [];
+        }
+        acc[word.category].push(word);
+        return acc;
+      },
+      {} as Record<string, IWord[]>,
+    ) as Record<string, IWord[]>;
   }, [words]);
 
   const handleLoadMore = async () => {

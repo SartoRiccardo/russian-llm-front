@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 import { useStats } from '@/hooks/useStats';
 import WordSkill from '@/components/other/WordSkill';
 import ErrorMessage from '@/components/ui/ErrorMessage';

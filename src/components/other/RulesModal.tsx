@@ -37,11 +37,7 @@ export default function RulesModal({
           X
         </button>
       </div>
-      <GrammarRules
-        rules={rules}
-        highlightedRuleIds={highlightedRuleIds}
-        title={title}
-      />
+      <GrammarRules rules={rules} highlightedRuleIds={highlightedRuleIds} />
     </div>
   );
 }

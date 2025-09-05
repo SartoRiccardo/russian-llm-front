@@ -3,7 +3,6 @@ import type { IWordRule } from '@/types/main';
 interface IGrammarRulesProps {
   rules: IWordRule[];
   highlightedRuleIds?: number[];
-  title: string;
 }
 
 /**
@@ -14,7 +13,6 @@ interface IGrammarRulesProps {
 export default function GrammarRules({
   rules,
   highlightedRuleIds = [],
-  title,
 }: IGrammarRulesProps) {
   const sortedRules = [...rules].sort((a, b) => {
     const aIsHighlighted = highlightedRuleIds.includes(a.id);
@@ -30,7 +28,6 @@ export default function GrammarRules({
 
   return (
     <div data-cy="grammar-rules">
-      <h3 className="text-xl font-bold mb-4">{title}</h3>
       <ul>
         {sortedRules.map((rule) => (
           <li

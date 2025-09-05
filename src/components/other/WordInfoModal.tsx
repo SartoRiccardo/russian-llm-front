@@ -16,15 +16,10 @@ export default function WordInfoModal({ word, onClose }: IWordInfoModalProps) {
   const [selectedRuleInfo, setSelectedRuleInfo] = useState<{
     rules: IWordRule[];
     ruleIds: number[];
-    title: string;
   } | null>(null);
 
-  const handleShowRules = (
-    rules: IWordRule[],
-    ruleIds: number[],
-    title: string,
-  ) => {
-    setSelectedRuleInfo({ rules, ruleIds, title });
+  const handleShowRules = (rules: IWordRule[], ruleIds: number[]) => {
+    setSelectedRuleInfo({ rules, ruleIds });
   };
 
   const handleBackToVariants = () => {
@@ -37,7 +32,7 @@ export default function WordInfoModal({ word, onClose }: IWordInfoModalProps) {
         <RulesModal
           rules={selectedRuleInfo.rules}
           highlightedRuleIds={selectedRuleInfo.ruleIds}
-          title={selectedRuleInfo.title}
+          title={`${word.word_ru} - ${word.word_en}`}
           onClose={onClose}
           onBack={handleBackToVariants}
         />
@@ -49,8 +44,8 @@ export default function WordInfoModal({ word, onClose }: IWordInfoModalProps) {
           {word.variants.map((variant, index) => (
             <WordVariant
               key={index}
-              type={word.type}
               variant={variant}
+              type={word.type}
               onShowRules={handleShowRules}
             />
           ))}

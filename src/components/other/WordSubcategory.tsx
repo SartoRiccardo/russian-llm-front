@@ -29,10 +29,10 @@ export default function WordSubcategory({
         <span>{subcategory.mastery}/4</span>
       </div>
       <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <GrammarRules
-          rules={subcategory.rules}
-          title={`${category} - ${subcategory.id}`}
-        />
+        <h3 className="text-xl font-bold mb-4">
+          {category} - {subcategory.id}
+        </h3>
+        <GrammarRules rules={subcategory.rules} />
       </Modal>
     </>
   );

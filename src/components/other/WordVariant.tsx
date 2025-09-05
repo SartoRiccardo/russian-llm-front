@@ -5,7 +5,7 @@ import type { IWordRule } from '@/types/main';
 interface IWordVariantProps {
   type: string;
   variant: IWordVariant;
-  onShowRules: (rules: IWordRule[], ruleIds: number[], title: string) => void;
+  onShowRules: (rules: IWordRule[], ruleIds: number[]) => void;
 }
 
 /**
@@ -42,13 +42,7 @@ export default function WordVariant({
         {hasRules && wordSkills && (
           <button
             data-cy="variant-rules-button"
-            onClick={() =>
-              onShowRules(
-                getRulesForVariant(),
-                variant.rules,
-                `${variant.group} - ${variant.subcategory}`,
-              )
-            }
+            onClick={() => onShowRules(getRulesForVariant(), variant.rules)}
             className="ml-4 p-2 rounded-full bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           >
             Rules

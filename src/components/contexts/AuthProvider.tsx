@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       clearTimeout(retryTimeout);
       clearTimeout(slowNetworkTimeout);
     };
-  }, [handleLogin]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const login = async (
     email: string,
@@ -121,13 +121,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       }
     } catch (error) {
       if (latestFetchId.current !== fetchId) return;
-
       setUserData(null);
       throw error;
     } finally {
-      if (latestFetchId.current !== fetchId) return;
-
-      setIsLoading(false);
+      if (latestFetchId.current === fetchId) {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -139,19 +138,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       await apiLogout();
     } finally {
-      if (latestFetchId.current !== fetchId) return;
+      if (latestFetchId.current === fetchId) {
+        localStorage.removeItem(SESSION_EXPIRE_KEY);
 
-      localStorage.removeItem(SESSION_EXPIRE_KEY);
-
-      if (redirect) {
-        flushSync(() => {
+        if (redirect) {
+          flushSync(() => {
+            setUserData(null);
+            setIsLoading(false);
+          });
+          navigate(`/login?redirect=${encodeURIComponent(redirect)}`);
+        } else {
           setUserData(null);
           setIsLoading(false);
-        });
-        navigate(`/login?redirect=${encodeURIComponent(redirect)}`);
-      } else {
-        setUserData(null);
-        setIsLoading(false);
+        }
       }
     }
   };

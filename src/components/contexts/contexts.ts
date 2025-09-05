@@ -2,7 +2,6 @@ import { createContext } from 'react';
 import type { IAuthContext } from '@/types/main';
 import type { IToastContext } from '@/types/toasts';
 import type { IStatsContext } from '@/types/stats';
-
 /**
  * The authentication context for the application.
  */

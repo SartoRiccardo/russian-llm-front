@@ -80,7 +80,13 @@ export function sendData(data: DataSend): void {
 
 ## Mocking Data
 
-You may be asked to mock data coming from the backend. When asked to do so, put all mocking logic in the **service file** for that service. This makes maintaining easy because all the app uses an API coming from a single source of truth, and once we are ready to connect the real back-end it's as easy as only changing that file. If the task specifies to implement some error handling logic, mock a fetch response to only have the attributes you need.
+### 1. Mock Webserver
+
+You may be asked to mock data coming from the backend. First, you must check if an **api mock file** is present. This is a file called exactly the same as the service file, but with a `.mock.ts` extension. If it exists, implement a very simple mock call inside that file.
+
+### 2. Fetch Mock
+
+You may be asked to mock data coming from services where the mock webserver doesn't exist. When asked to do so, put all mocking logic in the **service file** for that service. This makes maintaining easy because all the app uses an API coming from a single source of truth, and once we are ready to connect the real back-end it's as easy as only changing that file. If the task specifies to implement some error handling logic, mock a fetch response to only have the attributes you need.
 
 When mocking API calls, use the `fetch-mock` library to mock individual routes. When mocking requests, the schema will always be provided but the URL will probably not be provided. In this case, you are free to invent an URL which will be corrected at a later date. The base URL is always somewhere in the environment variables, look at those and if it doesn't exist teminate the process and ask for it.
 

@@ -17,6 +17,7 @@ import withAuthLoading from '@/components/hoc/withAuthLoading';
  */
 function VocabularyPage() {
   const { words, pages, fetchWords, isLoading: isLoadingWords } = useWords();
+  const [isRetryingWords, setIsRetryingWords] = useState(false);
   const { wordSkills, isLoadingStats, loadStats } = useStats();
   const { logout } = useAuth();
   const [statsError, setStatsError] = useState<Error | null>(null);
@@ -59,22 +60,25 @@ function VocabularyPage() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const groupedWords = useMemo(() => {
-    return words.reduce(
-      (acc, word) => {
-        if (!acc[word.category]) {
-          acc[word.category] = [];
-        }
-        acc[word.category].push(word);
-        return acc;
-      },
-      {} as Record<string, IWord[]>,
-    ) as Record<string, IWord[]>;
+    return words.reduce((acc, word) => {
+      if (!acc[word.category]) {
+        acc[word.category] = [];
+      }
+      acc[word.category].push(word);
+      return acc;
+    }, {} as Record<string, IWord[]>) as Record<string, IWord[]>;
   }, [words]);
 
   const handleLoadMore = async () => {
-    if (isLoadingWords || (pages !== null && currentPage >= pages)) return;
+    if (
+      isLoadingWords ||
+      isRetryingWords ||
+      (pages !== null && currentPage >= pages)
+    )
+      return;
 
     const doFetchWords = async (page: number) => {
+      let retrying = false;
       try {
         await fetchWords(page);
         setCurrentPage((prev) => prev + 1);
@@ -83,17 +87,19 @@ function VocabularyPage() {
         const error = err as Error;
         if (error instanceof UnauthorizedError) {
           logout('/vocabulary');
-          return;
         }
         if (error instanceof ServerError) {
           setWordsError(error);
         } else {
           // Network error
+          retrying = true;
           fetchWordsRetryTimeout.current = setTimeout(
             () => doFetchWords(page),
             2000,
           );
         }
+      } finally {
+        setIsRetryingWords(retrying);
       }
     };
 

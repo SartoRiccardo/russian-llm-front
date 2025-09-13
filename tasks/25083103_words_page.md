@@ -70,7 +70,6 @@ To mock credible data, choose a few words (which can be verbs, adjectives, and n
 In a `vocabulary.cy.ts` file, you should test the following.
 
 1.  **Page loads and infinite scroll works**
-
     - Mock successful API calls for page 1 and page 2 of the words list using separate fixtures.
     - Check that the initial word categories are rendered correctly, displaying their average win percentage. Give them a `data-cy=word-category` attribute.
     - Scroll to the loader component at the bottom of the page.
@@ -78,20 +77,17 @@ In a `vocabulary.cy.ts` file, you should test the following.
     - Check that the new words from page 2 are correctly appended to the list.
 
 2.  **Word category expands and shows sorted words**
-
     - Mock a successful API call for the words list. (Use a previously used fixture).
     - Click on a word category.
     - Check that the section expands and the words within it are now visible. Each word row should have a `data-cy=word-item` attribute. The Russian word itself should have a `data-cy=word-ru` attribute.
 
 3.  **Info modal shows word variants**
-
     - Within a word item, click the info button (`data-cy=word-info-button`).
     - Check that the main modal (`data-cy=modal`) becomes visible.
     - Verify that the modal displays the base word's information and a list of its variants. Each variant should have a `data-cy=variant-item` attribute.
     - Check that the variants are correctly grouped by their `group` property and sorted by `sort_order`. Each group should be selectabley with a `data-cy=word-group` attribute.
 
 4.  **Rules modal shows correct highlighted rules and back button works**
-
     - From the open info modal, click the question mark button on a variant (`data-cy=variant-rules-button`).
     - Verify that the modal's content is replaced by the rules component (`data-cy="grammar-rules"`).
     - Check that the rules associated with the variant are displayed and are highlighted (`data-cy=highlighted-rule`).
@@ -99,14 +95,12 @@ In a `vocabulary.cy.ts` file, you should test the following.
     - Check that the modal content reverts to showing the previous word variants list.
 
 5.  **Buttons depending on stats data are hidden if it's unavailable**
-
     - Mock a failed GET to the stats to simulate a state where the stats data (rules, subcategories) failed to load. Keep in mind that the retry logic should make it keep retrying so it should consistently return a Network Error.
     - Mock a successful call to the words API. Use a previous fixture
     - Open the info modal for a word.
     - Verify that the question mark buttons (`data-cy=variant-rules-button`) on the variants are **not** visible.
 
 6.  **Unauthorized error while fetching words**
-
     - Intercept the API call for the words list and return a 401 Unauthorized status.
     - Check that the user is redirected to the login page with a correct `redirect`.
 

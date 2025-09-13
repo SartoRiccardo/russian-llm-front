@@ -30,42 +30,41 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleLogin = useCallback(async () => {
     const sessionExpireFromStorage = localStorage.getItem(SESSION_EXPIRE_KEY);
-    if (sessionExpireFromStorage) {
-      setIsLoading(true);
-      const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
-      if (sessionExpireInt > Date.now()) {
-        const fetchId = Math.random();
-        latestFetchId.current = fetchId;
-
-        try {
-          const response =
-            (await apiCheckLoginStatus()) as IAuthnSuccessResponse;
-          if (latestFetchId.current === fetchId) {
-            setUserData({
-              username: response.username,
-              sessionExpire: response.sessionExpire,
-            });
-          }
-        } catch (error) {
-          if (latestFetchId.current === fetchId) {
-            // Unauthorized or other error
-            // Only delete sessionExpire if it's a 4xx error, not network error
-            if (
-              error instanceof Error &&
-              !error.message.includes('NetworkError')
-            ) {
-              localStorage.removeItem(SESSION_EXPIRE_KEY);
-            }
-            setUserData(null);
-          }
-        }
-      } else {
-        localStorage.removeItem(SESSION_EXPIRE_KEY);
-        setUserData(null);
-      }
+    if (!sessionExpireFromStorage) {
+      setIsLoading(false);
+      return;
+    }
+    const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
+    if (sessionExpireInt <= Date.now()) {
+      localStorage.removeItem(SESSION_EXPIRE_KEY);
+      setUserData(null);
+      setIsLoading(false);
+      return;
     }
 
-    setIsLoading(false);
+    const fetchId = Math.random();
+    latestFetchId.current = fetchId;
+    setIsLoading(true);
+    try {
+      const response = (await apiCheckLoginStatus()) as IAuthnSuccessResponse;
+      if (latestFetchId.current === fetchId) {
+        setUserData({
+          username: response.username,
+          sessionExpire: response.sessionExpire,
+        });
+      }
+    } catch (error) {
+      if (latestFetchId.current === fetchId) {
+        // Unauthorized or other error
+        // Only delete sessionExpire if it's a 4xx error, not network error
+        if (error instanceof Error && !error.message.includes('NetworkError')) {
+          localStorage.removeItem(SESSION_EXPIRE_KEY);
+        }
+        setUserData(null);
+      }
+    } finally {
+      if (latestFetchId.current === fetchId) setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {

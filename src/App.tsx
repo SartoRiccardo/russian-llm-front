@@ -20,39 +20,35 @@ import VocabularyPage from '@/pages/VocabularyPage';
  * The impoted component inside this file is already authenticated.
  */
 const AppRoutes = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
+  const anonymous = !isLoading && !isLoggedIn;
 
   return (
     <Routes>
-      <Route
-        path="/"
-        element={
-          isLoggedIn ? <Navigate to="/exercises" /> : <Navigate to="/login" />
-        }
-      />
-      <Route
-        path="/login"
-        element={isLoggedIn ? <Navigate to="/exercises" /> : <LoginPage />}
-      />
-      <Route
-        path="/forgot-password"
-        element={
-          isLoggedIn ? <Navigate to="/settings" /> : <ForgotPasswordPage />
-        }
-      />
-      <Route
-        path="/password-reset"
-        element={
-          isLoggedIn ? <Navigate to="/settings" /> : <PasswordResetPage />
-        }
-      />
-      <Route path="/exercises" element={<ExercisesPage />} />
-      <Route path="/exercises/:id" element={<ExerciseDetailPage />} />
-      <Route element={<StatsContextRoute />}>
-        <Route path="/stats" element={<StatsPage />} />
-        <Route path="/vocabulary" element={<VocabularyPage />} />
-      </Route>
-      <Route path="/settings" element={<div>Not implemented</div>} />
+      {anonymous ? (
+        <>
+          <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/password-reset" element={<PasswordResetPage />} />
+        </>
+      ) : (
+        <>
+          <Route path="/" element={<Navigate to="/exercises" />} />
+          <Route
+            path="/forgot-password"
+            element={<Navigate to="/settings" />}
+          />
+          <Route path="/password-reset" element={<Navigate to="/settings" />} />
+          <Route path="/exercises" element={<ExercisesPage />} />
+          <Route path="/exercises/:id" element={<ExerciseDetailPage />} />
+          <Route element={<StatsContextRoute />}>
+            <Route path="/stats" element={<StatsPage />} />
+            <Route path="/vocabulary" element={<VocabularyPage />} />
+          </Route>
+          <Route path="/settings" element={<div>Not implemented</div>} />
+        </>
+      )}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );

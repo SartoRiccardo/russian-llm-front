@@ -9,12 +9,13 @@ import ErrorMessage from '@/components/ui/ErrorMessage';
 import type { IWord } from '@/types/words';
 import type { IWordSkillSchema } from '@/types/main';
 import WordSkill from '@/components/vocabulary/WordSkill';
+import withAuthLoading from '@/components/hoc/withAuthLoading';
 
 /**
  * Vocabulary page component.
  * Displays the user's words, grouped by category.
  */
-export default function VocabularyPage() {
+function VocabularyPage() {
   const { words, pages, fetchWords, isLoading: isLoadingWords } = useWords();
   const { wordSkills, isLoadingStats, loadStats } = useStats();
   const { logout } = useAuth();
@@ -136,3 +137,7 @@ export default function VocabularyPage() {
     </div>
   );
 }
+
+const AuthenticatedVocabularyPage = withAuthLoading(VocabularyPage);
+
+export default AuthenticatedVocabularyPage;

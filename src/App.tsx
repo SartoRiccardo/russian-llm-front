@@ -25,6 +25,12 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route
+        path="/"
+        element={
+          isLoggedIn ? <Navigate to="/exercises" /> : <Navigate to="/login" />
+        }
+      />
+      <Route
         path="/login"
         element={isLoggedIn ? <Navigate to="/exercises" /> : <LoginPage />}
       />
@@ -42,12 +48,12 @@ const AppRoutes = () => {
       />
       <Route path="/exercises" element={<ExercisesPage />} />
       <Route path="/exercises/:id" element={<ExerciseDetailPage />} />
-      <Route path="/" element={<StatsContextRoute />}>
-        <Route path="stats" element={<StatsPage />} />
-        <Route path="vocabulary" element={<VocabularyPage />} />
+      <Route element={<StatsContextRoute />}>
+        <Route path="/stats" element={<StatsPage />} />
+        <Route path="/vocabulary" element={<VocabularyPage />} />
       </Route>
       <Route path="/settings" element={<div>Not implemented</div>} />
-      <Route path="*" element={<Navigate to="/exercises" />} />
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };

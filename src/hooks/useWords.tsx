@@ -16,6 +16,7 @@ export default function useWords() {
     lastFetchId.current[page] = currentFetchId;
 
     setIsLoading(true);
+    let notStale = false;
     try {
       const data = await getWords(page);
       if (lastFetchId.current[page] === currentFetchId) {
@@ -28,12 +29,13 @@ export default function useWords() {
       }
     } finally {
       if (lastFetchId.current[page] === currentFetchId) {
+        notStale = lastFetchId.current[page] === currentFetchId;
         delete lastFetchId.current[page];
         setIsLoading(false);
       }
     }
 
-    return lastFetchId.current[page] === currentFetchId;
+    return notStale;
   }, []);
 
   return {

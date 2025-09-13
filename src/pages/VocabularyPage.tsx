@@ -80,9 +80,10 @@ function VocabularyPage() {
     const doFetchWords = async (page: number) => {
       let retrying = false;
       try {
-        await fetchWords(page);
-        setCurrentPage((prev) => prev + 1);
-        setWordsError(null);
+        if (await fetchWords(page)) {
+          setCurrentPage((prev) => prev + 1);
+          setWordsError(null);
+        }
       } catch (err: unknown) {
         const error = err as Error;
         if (error instanceof UnauthorizedError) {

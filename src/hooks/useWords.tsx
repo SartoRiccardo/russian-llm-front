@@ -11,7 +11,7 @@ export default function useWords() {
   const [isLoading, setIsLoading] = useState(false);
   const lastFetchId = useRef<{ [key: number]: number }>({});
 
-  const fetchWords = useCallback(async (page: number) => {
+  const fetchWords = useCallback(async (page: number): Promise<boolean> => {
     const currentFetchId = Math.random();
     lastFetchId.current[page] = currentFetchId;
 
@@ -32,6 +32,8 @@ export default function useWords() {
         setIsLoading(false);
       }
     }
+
+    return lastFetchId.current[page] === currentFetchId;
   }, []);
 
   return {

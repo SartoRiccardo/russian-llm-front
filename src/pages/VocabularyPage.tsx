@@ -78,6 +78,8 @@ function VocabularyPage() {
       return;
 
     const doFetchWords = async (page: number) => {
+      setWordsError(null);
+
       let retrying = false;
       try {
         if (await fetchWords(page)) {
@@ -131,15 +133,25 @@ function VocabularyPage() {
       {Object.entries(groupedWords).map(([category, words]) => (
         <WordCategory key={category} category={category} words={words} />
       ))}
-      {(pages === null || currentPage < pages) && (
-        <Loader key={currentPage} onVisible={handleLoadMore}>
-          Loading...
-        </Loader>
-      )}
-      {wordsError && (
-        <div data-cy="words-error-message" className="text-red-500">
-          Error loading words
+      {wordsError ? (
+        <div className="text-center">
+          <div data-cy="words-error-message">
+            <ErrorMessage message="Error loading words" />
+          </div>
+          <button
+            data-cy="btn-retry-words"
+            onClick={handleLoadMore}
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          >
+            Retry
+          </button>
         </div>
+      ) : (
+        (pages === null || currentPage < pages) && (
+          <Loader key={currentPage} onVisible={handleLoadMore}>
+            Loading...
+          </Loader>
+        )
       )}
     </div>
   );

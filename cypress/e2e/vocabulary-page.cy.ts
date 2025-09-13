@@ -119,20 +119,45 @@ describe('Vocabulary Page', () => {
         cy.get('[data-cy=variant-rules-button]').should('not.exist');
       });
 
-      it('displays an error message on server errors', () => {
-        cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/words?page=1`, {
-          statusCode: 503,
-        }).as('getWordsError');
+      it('displays an error message on server errors and allows retrying', () => {
+        cy.intercept(
+          'GET',
+          `${Cypress.env('VITE_API_BASE_URL')}/words?page=1`,
+          {
+            statusCode: 503,
+          },
+        ).as('getWordsError');
         cy.visit('/vocabulary');
 
         cy.wait('@getWordsError');
         cy.get('[data-cy=words-error-message]').should('be.visible');
+        cy.get('[data-cy=btn-retry-words]').should('be.visible');
+
+        cy.intercept(
+          'GET',
+          `${Cypress.env('VITE_API_BASE_URL')}/words?page=1`,
+          {
+            fixture: 'russian-llm-api/words-page-1.json',
+          },
+        ).as('getWordsPage1Success');
+
+        cy.get('[data-cy=btn-retry-words]').click();
+
+        cy.wait('@getWordsPage1Success');
+
+        cy.get('[data-cy=word-category]').should('have.length', 9);
+        cy.get('[data-cy=words-error-message]').should('not.exist');
+        cy.get('[data-cy=btn-retry-words]').should('not.exist');
       });
 
       it('redirects to login on unauthorized error', () => {
-        cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/words?page=1`, {
-          statusCode: 401,
-        }).as('getWordsUnauthorized');
+        cy.intercept(
+          'GET',
+          `${Cypress.env('VITE_API_BASE_URL')}/words?page=1`,
+          {
+            statusCode: 401,
+          },
+        ).as('getWordsUnauthorized');
         cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/logout`, {
           statusCode: 200,
         }).as('getLogout');

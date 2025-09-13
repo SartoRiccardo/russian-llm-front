@@ -171,7 +171,5 @@ describe('Stats and Vocabulary Page', () => {
         cy.location('pathname').should('eq', '/login');
       });
     });
-
-    
   });
 });

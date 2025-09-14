@@ -20,7 +20,13 @@ export default function useWords() {
     try {
       const data = await getWords(page);
       if (lastFetchId.current[page] === currentFetchId) {
-        setWords((prev) => [...prev, ...data.words]);
+        setWords((prev) => {
+          const allWords = [...prev, ...data.words];
+          const uniqueWords = Array.from(
+            new Map(allWords.map((word) => [word.word_ru, word])).values(),
+          );
+          return uniqueWords;
+        });
         setPages(data.pages);
       }
     } catch (err: unknown) {

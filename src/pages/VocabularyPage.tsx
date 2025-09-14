@@ -60,13 +60,16 @@ function VocabularyPage() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const groupedWords = useMemo(() => {
-    return words.reduce((acc, word) => {
-      if (!acc[word.category]) {
-        acc[word.category] = [];
-      }
-      acc[word.category].push(word);
-      return acc;
-    }, {} as Record<string, IWord[]>) as Record<string, IWord[]>;
+    return words.reduce(
+      (acc, word) => {
+        if (!acc[word.category]) {
+          acc[word.category] = [];
+        }
+        acc[word.category].push(word);
+        return acc;
+      },
+      {} as Record<string, IWord[]>,
+    ) as Record<string, IWord[]>;
   }, [words]);
 
   const handleLoadMore = async () => {

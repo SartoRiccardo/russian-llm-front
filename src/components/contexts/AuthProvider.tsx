@@ -94,15 +94,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const login = async (
-    email: string,
-    password: string,
-    redirect: string | null = null,
-  ) => {
+  const login = async (email: string, password: string) => {
     const fetchId = Math.random();
     latestFetchId.current = fetchId;
 
+    // if (redirect) flushSync(() => setIsLoading(true));
+    // else
     setIsLoading(true);
+
     try {
       const response = await apiLogin(email, password);
       if (latestFetchId.current !== fetchId) return;
@@ -111,22 +110,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         SESSION_EXPIRE_KEY,
         response.sessionExpire.toString(),
       );
-      if (redirect) {
-        flushSync(() =>
-          setUserData({
-            username: response.username,
-            sessionExpire: response.sessionExpire,
-          }),
-        );
-        navigate(redirect);
-      } else {
-        setUserData({
-          username: response.username,
-          sessionExpire: response.sessionExpire,
-        });
-      }
+
+      setUserData({
+        username: response.username,
+        sessionExpire: response.sessionExpire,
+      });
     } catch (error) {
       if (latestFetchId.current !== fetchId) return;
+
       setUserData(null);
       throw error;
     } finally {

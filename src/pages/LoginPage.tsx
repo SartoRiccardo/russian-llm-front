@@ -1,5 +1,5 @@
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate, Link, useSearchParams } from 'react-router';
+import { Link } from 'react-router';
 import { useToast } from '@/hooks/useToast';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -12,9 +12,6 @@ import { ApiError, ValidationError, ServerError } from '../types/errors';
 const LoginPage = () => {
   const { login } = useAuth();
   const { createToast } = useToast();
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const redirect = searchParams.get('redirect');
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -28,10 +25,7 @@ const LoginPage = () => {
     { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void },
   ) => {
     try {
-      await login(values.email, values.password, redirect);
-      if (!redirect) {
-        navigate('/');
-      }
+      await login(values.email, values.password);
     } catch (error) {
       let errorMessage = 'An unexpected error occurred.';
       if (error instanceof ValidationError) {

@@ -1,4 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router';
 import { AuthProvider } from '@/components/contexts/AuthProvider';
 import { useAuth } from '@/hooks/useAuth';
 import LoginPage from '@/pages/LoginPage';
@@ -10,6 +16,13 @@ import ExerciseDetailPage from '@/pages/ExerciseDetailPage';
 import StatsContextRoute from '@/components/contexts/route-groups/StatsContextRoute';
 import StatsPage from '@/pages/StatsPage';
 import VocabularyPage from '@/pages/VocabularyPage';
+
+const LoginRedirect = () => {
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const redirect = params.get('redirect');
+  return <Navigate to={redirect || '/'} />;
+};
 
 /**
  * Defines the application's routes.
@@ -34,6 +47,7 @@ const AppRoutes = () => {
         </>
       ) : (
         <>
+          <Route path="/login" element={<LoginRedirect />} />
           <Route
             path="/forgot-password"
             element={<Navigate to="/settings" />}

@@ -100,6 +100,33 @@ describe('Vocabulary Page', () => {
         cy.get('@modal').find('[data-cy=grammar-rules]').should('not.exist');
         cy.get('@modal').find('[data-cy=variant-item]').should('be.visible');
       });
+
+      it('expands a word skill to show its subcategories', () => {
+        cy.visit('/vocabulary');
+        cy.wait('@getStats');
+        cy.get('[data-cy=word-skill]').first().click();
+
+        cy.get('[data-cy=subcategory-section]').should('be.visible');
+        // From the fixture, the first skill (verbs) has 2 subcategories
+        cy.get('[data-cy=subcategory-section]')
+          .find('[data-cy^=subcategory-]')
+          .should('have.length', 2);
+      });
+
+      it('shows a modal with rules when a subcategory is clicked', () => {
+        cy.visit('/vocabulary');
+        cy.wait('@getStats');
+        cy.get('[data-cy=word-skill]').first().click();
+        // From the fixture, the first subcategory of the first skill is 'present-tense'
+        cy.get('[data-cy=subcategory-present-tense]').click();
+
+        cy.get('[data-cy=modal]').should('be.visible');
+        cy.get('[data-cy=grammar-rules]').should('be.visible');
+        // From the fixture, the first subcategory of the first skill has 2 rules.
+        cy.get('[data-cy=grammar-rules]')
+          .find('[data-cy=rule-item]')
+          .should('have.length', 2);
+      });
     });
 
     describe('Error Handling and Edge Cases', () => {
@@ -117,6 +144,16 @@ describe('Vocabulary Page', () => {
           .click();
 
         cy.get('[data-cy=variant-rules-button]').should('not.exist');
+      });
+
+      it('shows an error component on server errors (Vocabulary Page)', () => {
+        cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/stats`, {
+          statusCode: 500,
+        }).as('getStatsError');
+        cy.visit('/vocabulary');
+        cy.wait('@getStatsError');
+
+        cy.get('[data-cy=vocabulary-stats-error]').should('be.visible');
       });
 
       it('displays an error message on server errors and allows retrying', () => {

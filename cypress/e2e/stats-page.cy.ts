@@ -1,4 +1,4 @@
-describe('Stats and Vocabulary Page', () => {
+describe('Stats Page', () => {
   describe('Authenticated user', () => {
     beforeEach(() => {
       cy.login();
@@ -31,36 +31,6 @@ describe('Stats and Vocabulary Page', () => {
       });
     });
 
-    describe('Vocabulary Page', () => {
-      beforeEach(() => {
-        cy.visit('/vocabulary');
-        cy.wait('@getStats');
-      });
-
-      it('expands a word skill to show its subcategories', () => {
-        cy.get('[data-cy=word-skill]').first().click();
-
-        cy.get('[data-cy=subcategory-section]').should('be.visible');
-        // From the fixture, the first skill (verbs) has 2 subcategories
-        cy.get('[data-cy=subcategory-section]')
-          .find('[data-cy^=subcategory-]')
-          .should('have.length', 2);
-      });
-
-      it('shows a modal with rules when a subcategory is clicked', () => {
-        cy.get('[data-cy=word-skill]').first().click();
-        // From the fixture, the first subcategory of the first skill is 'present-tense'
-        cy.get('[data-cy=subcategory-present-tense]').click();
-
-        cy.get('[data-cy=modal]').should('be.visible');
-        cy.get('[data-cy=grammar-rules]').should('be.visible');
-        // From the fixture, the first subcategory of the first skill has 2 rules.
-        cy.get('[data-cy=grammar-rules]')
-          .find('[data-cy=rule-item]')
-          .should('have.length', 2);
-      });
-    });
-
     describe('Error Handling', () => {
       it('shows an error page on server errors (Stats Page)', () => {
         cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/stats`, {
@@ -90,16 +60,6 @@ describe('Stats and Vocabulary Page', () => {
         cy.wait('@getStatsSuccess');
 
         cy.get('[data-cy=skill-list]').should('be.visible');
-      });
-
-      it('shows an error component on server errors (Vocabulary Page)', () => {
-        cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/stats`, {
-          statusCode: 500,
-        }).as('getStatsError');
-        cy.visit('/vocabulary');
-        cy.wait('@getStatsError');
-
-        cy.get('[data-cy=vocabulary-stats-error]').should('be.visible');
       });
 
       it('redirects to login on unauthorized error and returns after login', () => {

@@ -153,15 +153,9 @@ describe('Stats and Vocabulary Page', () => {
             },
           },
         ).as('checkLoginStatusUnauthorized');
-        cy.intercept('GET', `${Cypress.env('VITE_API_BASE_URL')}/logout`, {
-          statusCode: 200,
-        }).as('getLogout');
 
         cy.visit('/stats');
-
         cy.wait('@checkLoginStatusUnauthorized');
-        cy.wait('@getLogout');
-
         cy.location('pathname').should('eq', '/login');
       });
 

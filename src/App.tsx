@@ -49,7 +49,8 @@ const AppRoutes = () => {
           <Route path="/" element={<Navigate to="/exercises" />} />
         </>
       )}
-      <Route path="*" element={<Navigate to="/" />} />
+
+      {!isLoading && <Route path="*" element={<Navigate to="/" />} />}
     </Routes>
   );
 };

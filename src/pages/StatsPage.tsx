@@ -5,12 +5,13 @@ import { useAuth } from '@/hooks/useAuth';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import { UnauthorizedError, ServerError } from '@/types/errors';
 import type { ISkillSchema } from '@/types/main';
+import withAuthLoading from '@/components/hoc/withAuthLoading';
 
 /**
  * Stats page component.
  * Displays the user's language skills.
  */
-export default function StatsPage() {
+function StatsPage() {
   const { languageSkills, isLoadingStats, loadStats } = useStats();
   const { logout } = useAuth();
   const [error, setError] = useState<Error | null>(null);
@@ -82,3 +83,7 @@ export default function StatsPage() {
     </div>
   );
 }
+
+const AuthenticatedStatsPage = withAuthLoading(StatsPage);
+
+export default AuthenticatedStatsPage;

@@ -32,3 +32,10 @@ export class InvalidTokenError extends ValidationError {
     this.name = 'InvalidTokenError';
   }
 }
+
+export class UnauthorizedError extends ApiError {
+  constructor(message: string = 'Unauthorized') {
+    super(message);
+    this.name = 'UnauthorizedError';
+  }
+}

@@ -1,5 +1,59 @@
 @import 'tailwindcss';
 
+@layer base {
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(1rem);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(1rem);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.1s ease-out forwards;
+  }
+
+  .animate-fade-out {
+    animation: fadeOut 0.1s ease-in forwards;
+  }
+
+  .slide-up {
+    animation: slideUp 0.1s ease-out forwards;
+  }
+
+  .slide-down {
+    animation: slideDown 0.1s ease-in forwards;
+  }
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

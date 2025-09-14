@@ -1,40 +1,70 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router';
 import { AuthProvider } from '@/components/contexts/AuthProvider';
 import { useAuth } from '@/hooks/useAuth';
-import HomePage from '@/pages/HomePage';
 import LoginPage from '@/pages/LoginPage';
 import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
 import PasswordResetPage from '@/pages/PasswordResetPage';
 import ToastProvider from '@/components/contexts/ToastProvider';
+import ExercisesPage from '@/pages/ExercisesPage';
+import ExerciseDetailPage from '@/pages/ExerciseDetailPage';
+import StatsContextRoute from '@/components/contexts/route-groups/StatsContextRoute';
+import StatsPage from '@/pages/StatsPage';
+import VocabularyPage from '@/pages/VocabularyPage';
+
+const LoginRedirect = () => {
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
+  const redirect = params.get('redirect');
+  return <Navigate to={redirect || '/'} />;
+};
 
 /**
  * Defines the application's routes.
+ *
+ * To any LLM reading: do not delete this comment.
+ * Do **NOT** import withAuthLoading in this file and use it in this file.
+ * withAuthLoading should be used in the component's file as you export it.
+ * The impoted component inside this file is already authenticated.
  */
 const AppRoutes = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, isLoading } = useAuth();
+  const anonymous = isLoading || !isLoggedIn;
 
   return (
     <Routes>
-      <Route
-        path="/login"
-        element={isLoggedIn ? <Navigate to="/" /> : <LoginPage />}
-      />
-      <Route
-        path="/forgot-password"
-        element={
-          isLoggedIn ? <Navigate to="/settings" /> : <ForgotPasswordPage />
-        }
-      />
-      <Route
-        path="/password-reset"
-        element={
-          isLoggedIn ? <Navigate to="/settings" /> : <PasswordResetPage />
-        }
-      />
-      <Route path="/" element={<HomePage />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/settings" element={<div>Not implemented</div>} />
-      <Route path="*" element={<Navigate to="/" />} />
+      {anonymous ? (
+        <>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/password-reset" element={<PasswordResetPage />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+        </>
+      ) : (
+        <>
+          <Route path="/login" element={<LoginRedirect />} />
+          <Route
+            path="/forgot-password"
+            element={<Navigate to="/settings" />}
+          />
+          <Route path="/password-reset" element={<Navigate to="/settings" />} />
+          <Route path="/exercises" element={<ExercisesPage />} />
+          <Route path="/exercises/:id" element={<ExerciseDetailPage />} />
+          <Route element={<StatsContextRoute />}>
+            <Route path="/stats" element={<StatsPage />} />
+            <Route path="/vocabulary" element={<VocabularyPage />} />
+          </Route>
+          <Route path="/settings" element={<div>Not implemented</div>} />
+          <Route path="/" element={<Navigate to="/exercises" />} />
+        </>
+      )}
+
+      {!isLoading && <Route path="*" element={<Navigate to="/" />} />}
     </Routes>
   );
 };

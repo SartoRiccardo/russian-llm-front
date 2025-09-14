@@ -1,5 +1,5 @@
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate, Link } from 'react-router';
+import { Link } from 'react-router';
 import { useToast } from '@/hooks/useToast';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -12,7 +12,6 @@ import { ApiError, ValidationError, ServerError } from '../types/errors';
 const LoginPage = () => {
   const { login } = useAuth();
   const { createToast } = useToast();
-  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     email: Yup.string()
@@ -27,7 +26,6 @@ const LoginPage = () => {
   ) => {
     try {
       await login(values.email, values.password);
-      navigate('/');
     } catch (error) {
       let errorMessage = 'An unexpected error occurred.';
       if (error instanceof ValidationError) {
@@ -41,7 +39,7 @@ const LoginPage = () => {
         type: 'ERROR',
         title: 'Authentication Error',
         content: errorMessage,
-        dataCy: 'wrong-credentials',
+        dataCy: 't-wrong-credentials',
       });
     }
     setSubmitting(false);

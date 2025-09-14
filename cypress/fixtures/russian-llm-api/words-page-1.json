@@ -1,0 +1,265 @@
+{
+  "words": [
+    {
+      "word_ru": "кофе",
+      "word_en": "coffee",
+      "category": "food",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.9,
+          "subcategory": "nominative",
+          "rules": [4]
+        },
+        {
+          "name": "Genitive",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 2,
+          "win_percent": 0.8,
+          "subcategory": "genitive",
+          "rules": [5]
+        },
+        {
+          "name": "Dative",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 3,
+          "win_percent": 0.7,
+          "subcategory": "dative",
+          "rules": []
+        },
+        {
+          "name": "Accusative",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 4,
+          "win_percent": 0.85,
+          "subcategory": "accusative",
+          "rules": [6]
+        },
+        {
+          "name": "Instrumental",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "",
+          "sort_order": 5,
+          "win_percent": 0.6,
+          "subcategory": "instrumental",
+          "rules": []
+        },
+        {
+          "name": "Prepositional",
+          "group": "Cases",
+          "word_ru": "кофе",
+          "word_ru_prefix": "о",
+          "sort_order": 6,
+          "win_percent": 0.65,
+          "subcategory": "prepositional",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "чай",
+      "word_en": "tea",
+      "category": "food",
+      "locked": false,
+      "type": "nouns",
+      "variants": [
+        {
+          "name": "Nominative",
+          "group": "Cases",
+          "word_ru": "чай",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.95,
+          "subcategory": "nominative",
+          "rules": [4]
+        },
+        {
+          "name": "Genitive",
+          "group": "Cases",
+          "word_ru": "чая",
+          "word_ru_prefix": "",
+          "sort_order": 2,
+          "win_percent": 0.9,
+          "subcategory": "genitive",
+          "rules": [5]
+        },
+        {
+          "name": "Accusative",
+          "group": "Cases",
+          "word_ru": "чай",
+          "word_ru_prefix": "",
+          "sort_order": 4,
+          "win_percent": 0.92,
+          "subcategory": "accusative",
+          "rules": [6]
+        }
+      ]
+    },
+    {
+      "word_ru": "привет",
+      "word_en": "hello",
+      "category": "greetings",
+      "locked": false,
+      "type": "interjections",
+      "variants": [
+        {
+          "name": "Formal",
+          "group": "Forms",
+          "word_ru": "здравствуйте",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.8,
+          "subcategory": "formal",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "спасибо",
+      "word_en": "thank you",
+      "category": "gratitude",
+      "locked": false,
+      "type": "interjections",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "спасибо",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.9,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "до свидания",
+      "word_en": "goodbye",
+      "category": "farewells",
+      "locked": false,
+      "type": "interjections",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "до свидания",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.75,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "да",
+      "word_en": "yes",
+      "category": "affirmation",
+      "locked": false,
+      "type": "particles",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "да",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.98,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "нет",
+      "word_en": "no",
+      "category": "negation",
+      "locked": false,
+      "type": "particles",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "нет",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.96,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "пожалуйста",
+      "word_en": "please",
+      "category": "politeness",
+      "locked": false,
+      "type": "adverbs",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "пожалуйста",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.88,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "извините",
+      "word_en": "excuse me",
+      "category": "apologies",
+      "locked": false,
+      "type": "verbs",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "извините",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.7,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    },
+    {
+      "word_ru": "как дела",
+      "word_en": "how are you",
+      "category": "questions",
+      "locked": false,
+      "type": "phrases",
+      "variants": [
+        {
+          "name": "Standard",
+          "group": "Forms",
+          "word_ru": "как дела",
+          "word_ru_prefix": "",
+          "sort_order": 1,
+          "win_percent": 0.82,
+          "subcategory": "standard",
+          "rules": []
+        }
+      ]
+    }
+  ],
+  "pages": 3
+}

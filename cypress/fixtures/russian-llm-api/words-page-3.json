@@ -1,0 +1,44 @@
+{
+  "words": [
+    {
+      "word_ru": "говорить",
+      "word_en": "to speak",
+      "category": "tourism",
+      "locked": false,
+      "type": "verbs",
+      "variants": [
+        {
+          "name": "Я (I)",
+          "group": "Present Tense",
+          "word_ru": "говорю",
+          "word_ru_prefix": "я",
+          "sort_order": 1,
+          "win_percent": 0.9,
+          "subcategory": "present-tense",
+          "rules": [2]
+        },
+        {
+          "name": "Ты (You)",
+          "group": "Present Tense",
+          "word_ru": "говоришь",
+          "word_ru_prefix": "ты",
+          "sort_order": 2,
+          "win_percent": 0.85,
+          "subcategory": "present-tense",
+          "rules": [2]
+        },
+        {
+          "name": "Он/Она/Оно (He/She/It)",
+          "group": "Present Tense",
+          "word_ru": "говорит",
+          "word_ru_prefix": "он",
+          "sort_order": 3,
+          "win_percent": 0.8,
+          "subcategory": "present-tense",
+          "rules": [2]
+        }
+      ]
+    }
+  ],
+  "pages": 3
+}

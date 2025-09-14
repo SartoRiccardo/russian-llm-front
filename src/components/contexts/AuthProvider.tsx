@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router';
 import {
   checkLoginStatus as apiCheckLoginStatus,
   login as apiLogin,
@@ -10,6 +11,7 @@ import type {
   IUserData,
 } from '@/types/main';
 import { AuthContext } from './contexts';
+import { flushSync } from 'react-dom';
 
 const SESSION_EXPIRE_KEY = 'sessionExpire';
 
@@ -21,40 +23,48 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userData, setUserData] = useState<IUserData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSlowNetwork, setIsSlowNetwork] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const latestFetchId = useRef(-1);
 
   const isLoggedIn = !!userData && userData.sessionExpire > Date.now();
 
   const handleLogin = useCallback(async () => {
     const sessionExpireFromStorage = localStorage.getItem(SESSION_EXPIRE_KEY);
-    if (sessionExpireFromStorage) {
-      setIsLoading(true);
-      const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
-      if (sessionExpireInt > Date.now()) {
-        try {
-          const response =
-            (await apiCheckLoginStatus()) as IAuthnSuccessResponse;
-          setUserData({
-            username: response.username,
-            sessionExpire: response.sessionExpire,
-          });
-        } catch (error) {
-          // Unauthorized or other error
-          // Only delete sessionExpire if it's a 4xx error, not network error
-          if (
-            error instanceof Error &&
-            !error.message.includes('NetworkError')
-          ) {
-            localStorage.removeItem(SESSION_EXPIRE_KEY);
-          }
-          setUserData(null);
-        }
-      } else {
-        localStorage.removeItem(SESSION_EXPIRE_KEY);
-        setUserData(null);
-      }
+    if (!sessionExpireFromStorage) {
+      setIsLoading(false);
+      return;
+    }
+    const sessionExpireInt = parseInt(sessionExpireFromStorage, 10);
+    if (sessionExpireInt <= Date.now()) {
+      localStorage.removeItem(SESSION_EXPIRE_KEY);
+      setUserData(null);
+      setIsLoading(false);
+      return;
     }
 
-    setIsLoading(false);
+    const fetchId = Math.random();
+    latestFetchId.current = fetchId;
+    setIsLoading(true);
+    try {
+      const response = (await apiCheckLoginStatus()) as IAuthnSuccessResponse;
+      if (latestFetchId.current === fetchId) {
+        setUserData({
+          username: response.username,
+          sessionExpire: response.sessionExpire,
+        });
+      }
+    } catch (error) {
+      if (latestFetchId.current === fetchId) {
+        // Unauthorized or other error
+        // Only delete sessionExpire if it's a 4xx error, not network error
+        if (error instanceof Error && !error.message.includes('NetworkError')) {
+          localStorage.removeItem(SESSION_EXPIRE_KEY);
+        }
+        setUserData(null);
+      }
+    } finally {
+      if (latestFetchId.current === fetchId) setIsLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -82,36 +92,63 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       clearTimeout(retryTimeout);
       clearTimeout(slowNetworkTimeout);
     };
-  }, [handleLogin]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const login = async (email: string, password: string) => {
+    const fetchId = Math.random();
+    latestFetchId.current = fetchId;
+
+    // if (redirect) flushSync(() => setIsLoading(true));
+    // else
     setIsLoading(true);
+
     try {
       const response = await apiLogin(email, password);
+      if (latestFetchId.current !== fetchId) return;
+
       localStorage.setItem(
         SESSION_EXPIRE_KEY,
         response.sessionExpire.toString(),
       );
+
       setUserData({
         username: response.username,
         sessionExpire: response.sessionExpire,
       });
     } catch (error) {
+      if (latestFetchId.current !== fetchId) return;
+
       setUserData(null);
       throw error;
     } finally {
-      setIsLoading(false);
+      if (latestFetchId.current === fetchId) {
+        setIsLoading(false);
+      }
     }
   };
 
-  const logout = async () => {
+  const logout = async (redirect?: string) => {
+    const fetchId = Math.random();
+    latestFetchId.current = fetchId;
+
     setIsLoading(true);
     try {
       await apiLogout();
     } finally {
-      localStorage.removeItem(SESSION_EXPIRE_KEY);
-      setUserData(null);
-      setIsLoading(false);
+      if (latestFetchId.current === fetchId) {
+        localStorage.removeItem(SESSION_EXPIRE_KEY);
+
+        if (redirect) {
+          flushSync(() => {
+            setUserData(null);
+            setIsLoading(false);
+          });
+          navigate(`/login?redirect=${encodeURIComponent(redirect)}`);
+        } else {
+          setUserData(null);
+          setIsLoading(false);
+        }
+      }
     }
   };
 

@@ -25,7 +25,7 @@ describe('Login Page', () => {
     cy.get('@passwordInput').type('password');
     cy.get('@loginForm').submit();
     cy.wait('@loginSuccess');
-    cy.location('pathname').should('eq', '/');
+    cy.location('pathname').should('eq', '/exercises');
   });
 
   /**
@@ -70,11 +70,11 @@ describe('Login Page', () => {
     cy.get('@passwordInput').type('password');
     cy.get('@loginForm').submit();
     cy.wait('@loginSuccess');
-    cy.location('pathname').should('eq', '/');
+    cy.location('pathname').should('eq', '/exercises');
 
     cy.visit('/login');
     cy.wait('@checkLoginStatus');
-    cy.location('pathname').should('eq', '/');
+    cy.location('pathname').should('eq', '/exercises');
   });
 
   describe('Handles Errors', () => {

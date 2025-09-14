@@ -22,7 +22,7 @@ export interface IAuthContext {
   sessionExpire: number;
   sessionExpireMs: number;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: (redirect?: string) => Promise<void>;
 }
 
 /**
@@ -30,4 +30,31 @@ export interface IAuthContext {
  */
 export interface AuthProviderProps {
   children: React.ReactNode;
+}
+
+export interface ISkillSchema {
+  id: 'reading' | 'speaking' | 'listening' | 'writing';
+  mastery: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2';
+}
+
+export interface IWordRule {
+  id: number;
+  rule: string;
+}
+
+export interface IWordSubcategory {
+  id: string;
+  mastery: number; // A number guaranteed to be between 0 and 4, included.
+  rules: IWordRule[];
+}
+
+export interface IWordSkillSchema {
+  id: string; // Word type is something like "verb", "noun", ...
+  mastery: number; // A number guaranteed to be between 0 and 4, included.
+  subcategories: IWordSubcategory[];
+}
+
+export interface IStatsResponse {
+  language_skills: ISkillSchema[];
+  word_skills: IWordSkillSchema[];
 }

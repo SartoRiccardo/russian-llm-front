@@ -21,20 +21,19 @@ import VocabularyPage from '@/pages/VocabularyPage';
  */
 const AppRoutes = () => {
   const { isLoggedIn, isLoading } = useAuth();
-  const anonymous = !isLoading && !isLoggedIn;
+  const anonymous = isLoading || !isLoggedIn;
 
   return (
     <Routes>
       {anonymous ? (
         <>
-          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/password-reset" element={<PasswordResetPage />} />
+          <Route path="/" element={<Navigate to="/login" />} />
         </>
       ) : (
         <>
-          <Route path="/" element={<Navigate to="/exercises" />} />
           <Route
             path="/forgot-password"
             element={<Navigate to="/settings" />}
@@ -47,6 +46,7 @@ const AppRoutes = () => {
             <Route path="/vocabulary" element={<VocabularyPage />} />
           </Route>
           <Route path="/settings" element={<div>Not implemented</div>} />
+          <Route path="/" element={<Navigate to="/exercises" />} />
         </>
       )}
       <Route path="*" element={<Navigate to="/" />} />

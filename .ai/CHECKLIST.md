@@ -1,9 +1,9 @@
 # Checklist
 
-- [x] 1. Login
-- [x] 2. Error toasts
-- [x] 3. Forgot Password Flow
-- [x] 25083101. Exercises Page
-- [x] 25083102. Stats Page
-- [x] 25083103. Words Page
-- [x] 2025/09/13 (01) Reload Button
+- [ ] 2025/08/25 (01) login
+- [ ] 2025/08/25 (02) error toasts
+- [ ] 2025/08/25 (03) forgot password flow
+- [ ] 2025/08/31 (01) exercises page
+- [ ] 2025/08/31 (02) stats page
+- [ ] 2025/08/31 (03) words page
+- [ ] 2025/09/13 (01) reload button

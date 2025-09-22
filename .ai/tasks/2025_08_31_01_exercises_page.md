@@ -1,4 +1,4 @@
-# 250831. Exercises Page
+# 2025/08/31 (01) Exercises page
 
 The exercises page should display the exercises the user can do. Upon clicking an exercise, you will be taken to the exercise's page. Some exercises might be disabled.
 

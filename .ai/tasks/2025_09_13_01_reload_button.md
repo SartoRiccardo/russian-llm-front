@@ -1,4 +1,4 @@
-# Reload Button
+# 2025/09/13 (01) Reload button
 
 Right now, when the word list (in 25083103 words page) fails to load due to a server error, the loader stays visible and there's an error message below. Change it so that, when this happens, the error message _replaces_ the loader and a "retry" button becomes visible to retry loading.
 

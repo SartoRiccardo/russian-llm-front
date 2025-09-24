@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import useWords from '@/hooks/useWords';
 import { useStats } from '@/hooks/useStats';
 import { useLoadStats } from '@/hooks/useLoadStats';
@@ -11,6 +11,7 @@ import type { IWord } from '@/types/words';
 import type { IWordSkillSchema } from '@/types/main';
 import WordSkill from '@/components/vocabulary/WordSkill';
 import withAuthLoading from '@/components/hoc/withAuthLoading';
+import { useOnMount } from '@/hooks/useOnMount';
 
 /**
  * Vocabulary page component.
@@ -19,7 +20,7 @@ import withAuthLoading from '@/components/hoc/withAuthLoading';
 function VocabularyPage() {
   const { words, pages, fetchWords, isLoading: isLoadingWords } = useWords();
   const [isRetryingWords, setIsRetryingWords] = useState(false);
-  const { wordSkills, isLoadingStats } = useStats();
+  const { wordSkills, isLoadingStats, isStale } = useStats();
   const { loadStats } = useLoadStats();
   const { logout } = useAuth();
   const [statsError, setStatsError] = useState<Error | null>(null);
@@ -30,8 +31,9 @@ function VocabularyPage() {
   );
 
   // Stats fetching logic
-  useEffect(() => {
+  useOnMount(() => {
     let retryTimout: ReturnType<typeof setTimeout> | null = null;
+    if (!isStale) return;
 
     const doLoadStats = async () => {
       try {
@@ -59,7 +61,7 @@ function VocabularyPage() {
       if (fetchWordsRetryTimeout.current)
         clearTimeout(fetchWordsRetryTimeout.current);
     };
-  }, [loadStats, logout]);
+  });
 
   const groupedWords = useMemo(() => {
     return words.reduce(

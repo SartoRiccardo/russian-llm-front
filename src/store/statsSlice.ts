@@ -7,6 +7,7 @@ interface StatsState {
   wordSkills: IWordSkillSchema[];
   isLoadingStats: boolean;
   lastLoadedAt: string | null;
+  isStale: boolean;
 }
 
 const initialState: StatsState = {
@@ -14,6 +15,7 @@ const initialState: StatsState = {
   wordSkills: [],
   isLoadingStats: true,
   lastLoadedAt: null,
+  isStale: true,
 };
 
 const statsSlice = createSlice({
@@ -28,13 +30,18 @@ const statsSlice = createSlice({
       state.languageSkills = action.payload.language_skills;
       state.wordSkills = action.payload.word_skills;
       state.lastLoadedAt = new Date().toISOString();
+      state.isStale = false;
     },
     statsError: (state) => {
       state.isLoadingStats = false;
     },
+    setStale: (state) => {
+      state.isStale = true;
+    },
   },
 });
 
-export const { statsLoading, statsReceived, statsError } = statsSlice.actions;
+export const { statsLoading, statsReceived, statsError, setStale } =
+  statsSlice.actions;
 
 export default statsSlice.reducer;

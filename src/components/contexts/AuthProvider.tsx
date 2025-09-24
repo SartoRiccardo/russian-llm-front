@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import {
   checkLoginStatus as apiCheckLoginStatus,
@@ -12,6 +12,7 @@ import type {
 } from '@/types/main';
 import { AuthContext } from './contexts';
 import { flushSync } from 'react-dom';
+import { useOnMount } from '@/hooks/useOnMount';
 
 const SESSION_EXPIRE_KEY = 'sessionExpire';
 
@@ -67,39 +68,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, []);
 
-  useEffect(() => {
-    let retryTimeout: ReturnType<typeof setTimeout>;
-
-    const slowNetworkTimeout = setTimeout(() => {
-      setIsSlowNetwork(true);
-    }, 10000);
-
-    const tryLogin = async () => {
-      try {
-        await handleLogin();
-        setIsSlowNetwork(false);
-        clearTimeout(slowNetworkTimeout);
-      } catch (error) {
-        if (error instanceof Error && error.message.includes('NetworkError')) {
-          retryTimeout = setTimeout(tryLogin, 2000);
-        }
-      }
-    };
-
-    tryLogin();
-
-    return () => {
-      clearTimeout(retryTimeout);
-      clearTimeout(slowNetworkTimeout);
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   const login = async (email: string, password: string) => {
     const fetchId = Math.random();
     latestFetchId.current = fetchId;
 
-    // if (redirect) flushSync(() => setIsLoading(true));
-    // else
     setIsLoading(true);
 
     try {
@@ -164,6 +136,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     login,
     logout,
   };
+
+  useOnMount(() => {
+    let retryTimeout: ReturnType<typeof setTimeout>;
+
+    const slowNetworkTimeout = setTimeout(() => {
+      setIsSlowNetwork(true);
+    }, 10000);
+
+    const tryLogin = async () => {
+      try {
+        await handleLogin();
+        setIsSlowNetwork(false);
+        clearTimeout(slowNetworkTimeout);
+      } catch (error) {
+        if (error instanceof Error && error.message.includes('NetworkError')) {
+          retryTimeout = setTimeout(tryLogin, 2000);
+        }
+      }
+    };
+
+    tryLogin();
+
+    return () => {
+      clearTimeout(retryTimeout);
+      clearTimeout(slowNetworkTimeout);
+    };
+  });
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>

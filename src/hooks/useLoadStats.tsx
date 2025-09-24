@@ -1,7 +1,12 @@
 import { useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { getStats } from '@/services/russian-llm-api';
-import { statsLoading, statsReceived, statsError } from '@/store/statsSlice';
+import {
+  statsLoading,
+  statsReceived,
+  statsError,
+  setStale,
+} from '@/store/statsSlice';
 import type { AppDispatch } from '@/store/store';
 
 export const useLoadStats = () => {
@@ -27,5 +32,9 @@ export const useLoadStats = () => {
     }
   }, [dispatch]);
 
-  return { loadStats };
+  const markStatsAsStale = useCallback(() => {
+    dispatch(setStale());
+  }, [dispatch]);
+
+  return { loadStats, markStatsAsStale };
 };

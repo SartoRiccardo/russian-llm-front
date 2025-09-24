@@ -93,7 +93,7 @@ export function sendData(data: DataSend): void {
 - You should default to using TypeScript interfaces wherever possible instead of types. Interfaces should begin with `I`, for example: `IUserResponseData`
 - If a type of a function's return type or parameter is an object, it **must** be declared as a type. For example:
 
-```ts
+```typescript
 // Wrong
 function someWrongFunction(someParam: {
   someProp: string;
@@ -107,6 +107,31 @@ function someCorrectFunction(
 ): Promise<IFunctionReturnType> {
   // Some code...
 }
+```
+
+- There is a custom `useOnMount` hook that executes a function only on component mount and never again. It has an API identical to that of `useEffect`, but without the dependency array at the end. It is useful for things such as fetching on page load. Below is an example on how to use it.
+
+```jsx
+import { useLoadTodos } from '@/hooks/useLoadTodos'; // Example hook
+import { useOnMount } from '@/hooks/useOnMount';
+
+export const SomeComponent = ({ children }) => {
+  const [todoCount, setTodoCount] = useState(-1);
+  const loadTodos = useLoadTodos();
+
+  useOnMount(() => {
+    const load = async () => {
+      await loadTodos();
+    };
+    load();
+
+    return () => {
+      /* Cleanup function on unmount */
+    };
+  });
+
+  return <div>{/* ...the component... */}</div>;
+};
 ```
 
 # Testing

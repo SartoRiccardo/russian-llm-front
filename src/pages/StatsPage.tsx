@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { useStats } from '@/hooks/useStats';
 import { useLoadStats } from '@/hooks/useLoadStats';
@@ -7,19 +7,21 @@ import ErrorMessage from '@/components/ui/ErrorMessage';
 import { UnauthorizedError, ServerError } from '@/types/errors';
 import type { ISkillSchema } from '@/types/main';
 import withAuthLoading from '@/components/hoc/withAuthLoading';
+import { useOnMount } from '@/hooks/useOnMount';
 
 /**
  * Stats page component.
  * Displays the user's language skills.
  */
 function StatsPage() {
-  const { languageSkills, isLoadingStats } = useStats();
+  const { languageSkills, isLoadingStats, isStale } = useStats();
   const { loadStats } = useLoadStats();
   const { logout } = useAuth();
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
+  useOnMount(() => {
     let retryTimout: ReturnType<typeof setTimeout> | null = null;
+    if (!isStale) return;
 
     const doLoadStats = async () => {
       try {
@@ -45,7 +47,7 @@ function StatsPage() {
     return () => {
       if (retryTimout) clearTimeout(retryTimout);
     };
-  }, [loadStats, logout]);
+  });
 
   if (error) {
     return <ErrorMessage message="Something went wrong on the server" />;

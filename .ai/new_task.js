@@ -21,7 +21,7 @@ async function main() {
   const datePrefix = `${year}_${month}_${day}`;
 
   const files = await fs.readdir(tasksDir);
-  const todayFiles = files.filter(file => file.startsWith(datePrefix));
+  const todayFiles = files.filter((file) => file.startsWith(datePrefix));
   const index = todayFiles.length + 1;
   const indexPadded = index.toString().padStart(2, '0');
 
@@ -45,8 +45,11 @@ async function main() {
   const taskFileName = `${datePrefix}_${indexPadded}_${snakeCaseTaskName}.md`;
   const taskFilePath = path.join(tasksDir, taskFileName);
 
-  await fs.writeFile(taskFilePath, `# ${year}/${month}/${day} (${indexPadded}) ${taskName}
-`);
+  await fs.writeFile(
+    taskFilePath,
+    `# ${year}/${month}/${day} (${indexPadded}) ${taskName}
+`,
+  );
 
   console.log(`Created task file: ${taskFilePath}`);
   console.log(`Updated checklist: ${checklistFile}`);

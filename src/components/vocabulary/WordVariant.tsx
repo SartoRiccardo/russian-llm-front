@@ -1,6 +1,6 @@
 import type { IWordVariant } from '@/types/words';
 import { useStats } from '@/hooks/useStats';
-import type { IWordRule } from '@/types/main';
+import type { IWordRule, IWordSubcategory } from '@/types/main';
 
 interface IWordVariantProps {
   type: string;
@@ -23,7 +23,7 @@ export default function WordVariant({
     const skill = wordSkills.find((s) => s.id === type);
     if (!skill) return [];
     const subcategory = skill.subcategories.find(
-      (sc) => sc.id === variant.subcategory,
+      (sc: IWordSubcategory) => sc.id === variant.subcategory,
     );
     if (!subcategory) return [];
     return subcategory.rules;

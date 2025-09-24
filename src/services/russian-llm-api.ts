@@ -7,18 +7,6 @@ import {
   InvalidTokenError,
   UnauthorizedError,
 } from '@/types/errors';
-import fetchMock from 'fetch-mock';
-
-interface IFetchMockBody {
-  body: string; // JSON-serialized
-  method: 'POST' | 'PUT' | 'DELETE' | 'GET' | 'OPTIONS' | 'PATCH';
-}
-
-type RequestedUrl = string;
-
-interface IFetchMockParams {
-  args: [RequestedUrl, IFetchMockBody];
-}
 
 export const checkLoginStatus = async (): Promise<IAuthnSuccessResponse> => {
   const response = await fetch(

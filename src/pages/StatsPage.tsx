@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useStats } from '@/hooks/useStats';
+import { useLoadStats } from '@/hooks/useLoadStats';
 import { useAuth } from '@/hooks/useAuth';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import { UnauthorizedError, ServerError } from '@/types/errors';
@@ -12,7 +13,8 @@ import withAuthLoading from '@/components/hoc/withAuthLoading';
  * Displays the user's language skills.
  */
 function StatsPage() {
-  const { languageSkills, isLoadingStats, loadStats } = useStats();
+  const { languageSkills, isLoadingStats } = useStats();
+  const { loadStats } = useLoadStats();
   const { logout } = useAuth();
   const [error, setError] = useState<Error | null>(null);
 
@@ -43,7 +45,7 @@ function StatsPage() {
     return () => {
       if (retryTimout) clearTimeout(retryTimout);
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loadStats, logout]);
 
   if (error) {
     return <ErrorMessage message="Something went wrong on the server" />;

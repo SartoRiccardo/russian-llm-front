@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import useWords from '@/hooks/useWords';
 import { useStats } from '@/hooks/useStats';
+import { useLoadStats } from '@/hooks/useLoadStats';
 import { useAuth } from '@/hooks/useAuth';
 import { UnauthorizedError, ServerError } from '@/types/errors';
 import WordCategory from '@/components/vocabulary/WordCategory';
@@ -18,7 +19,8 @@ import withAuthLoading from '@/components/hoc/withAuthLoading';
 function VocabularyPage() {
   const { words, pages, fetchWords, isLoading: isLoadingWords } = useWords();
   const [isRetryingWords, setIsRetryingWords] = useState(false);
-  const { wordSkills, isLoadingStats, loadStats } = useStats();
+  const { wordSkills, isLoadingStats } = useStats();
+  const { loadStats } = useLoadStats();
   const { logout } = useAuth();
   const [statsError, setStatsError] = useState<Error | null>(null);
   const [wordsError, setWordsError] = useState<Error | null>(null);
@@ -57,7 +59,7 @@ function VocabularyPage() {
       if (fetchWordsRetryTimeout.current)
         clearTimeout(fetchWordsRetryTimeout.current);
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loadStats, logout]);
 
   const groupedWords = useMemo(() => {
     return words.reduce(

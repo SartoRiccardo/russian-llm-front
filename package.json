@@ -9,7 +9,7 @@
     "serve:test": "(cd dist && php -S russian-llm.localhost:3000 server.php)",
     "lint": "eslint . && npx prettier . --write",
     "preview": "vite preview",
-    "task:new": "node .ai/new_task.js"
+    "task:new": "node commands/new_task.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.9.0",

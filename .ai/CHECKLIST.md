@@ -7,3 +7,5 @@
 - [x] 2025/08/31 (02) stats page
 - [x] 2025/08/31 (03) words page
 - [x] 2025/09/13 (01) reload button
+- [ ] 2025/09/24 (01) Create Redux store
+- [ ] 2025/09/22 (01) Grammar/Sentence exercises

@@ -20,6 +20,7 @@ This proect uses:
   - Use React Router's `Link` tag for navigation wherever possible, as it semantically translates to an `a` tag.
 - **Formik** for form validation
 - **Cypress** for testing
+- **Redux** for global state management
 
 React Router may be used **only** for routing. Any feature it has regarding state **should never be used**. For managing state, use React Contexts (more on this later).
 
@@ -92,7 +93,6 @@ export function sendData(data: DataSend): void {
   - For Formik error validation messages, `data-cy` attributes must start with `err-`
 - You should default to using TypeScript interfaces wherever possible instead of types. Interfaces should begin with `I`, for example: `IUserResponseData`
 - If a type of a function's return type or parameter is an object, it **must** be declared as a type. For example:
-
 ```typescript
 // Wrong
 function someWrongFunction(someParam: {
@@ -110,7 +110,6 @@ function someCorrectFunction(
 ```
 
 - There is a custom `useOnMount` hook that executes a function only on component mount and never again. It has an API identical to that of `useEffect`, but without the dependency array at the end. It is useful for things such as fetching on page load. Below is an example on how to use it.
-
 ```jsx
 import { useLoadTodos } from '@/hooks/useLoadTodos'; // Example hook
 import { useOnMount } from '@/hooks/useOnMount';
